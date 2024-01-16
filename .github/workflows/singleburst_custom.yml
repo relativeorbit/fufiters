@@ -6,13 +6,22 @@ on:
       reference:
         type: string
         required: true
-        description: reference burst
+        description: Reference Burst
         default: S1_136231_IW2_20200604T022312_VV_7C85-BURST
       secondary:
         type: string
         required: true
-        description: secondary burst
+        description: Secondary Burst
         default: S1_136231_IW2_20200616T022313_VV_5D11-BURST
+      nlooks:
+          type: choice
+          required: true
+          description: Range x Azimuth Looks
+          default: 5x1
+          options: 
+            - 20x4
+            - 10x2
+            - 5x1
 
 # TODO: parse inputs for dates to use in bucket-prefix
 
@@ -45,6 +54,14 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-west-2
 
+      - name: Get Bucket Prefix
+        env:
+          REF: ${{ inputs.reference }}
+          SEC: ${{ inputs.secondary }}
+        run: |
+          PREFIX=${REF:14:8}_${SEC:14:8}
+          echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
+
       - name: Run Example Workflow
         env: 
             EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
@@ -55,10 +72,10 @@ jobs:
             python -m hyp3_isce2 ++process insar_tops_burst \
             ${{ inputs.reference }}  \
             ${{ inputs.secondary }}  \
-            --looks 20x4 \
+            --looks ${{ inputs.nlooks }} \
             --apply-water-mask False \
             --bucket fufiters \
-            --bucket-prefix singleburst_custom
+            --bucket-prefix $PREFIX
 
       - name: Upload Hyp3 Output
         uses: actions/upload-artifact@v4
