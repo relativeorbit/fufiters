@@ -1,10 +1,10 @@
-name: FetchTLEs
+name: MacOSTest
 
 on:
   workflow_dispatch:
 
 jobs:
-  check-version:
+  hyp3-isce2:
     runs-on: macos-latest
     defaults:
       run:
