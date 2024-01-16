@@ -1,7 +1,20 @@
-name: SingleBurstTest
+name: SingleBurstCustom
 
 on:
   workflow_dispatch:
+    inputs:
+      reference:
+        type: string
+        required: true
+        description: reference burst
+        default: S1_136231_IW2_20200604T022312_VV_7C85-BURST
+      secondary:
+        type: string
+        required: true
+        description: secondary burst
+        default: S1_136231_IW2_20200616T022313_VV_5D11-BURST
+
+# TODO: parse inputs for dates to use in bucket-prefix
 
 jobs:
   hyp3-isce2:
@@ -40,15 +53,15 @@ jobs:
             ESA_PASSWORD: ${{ secrets.ESA_PASSWORD}}
         run: |
             python -m hyp3_isce2 ++process insar_tops_burst \
-            S1_136231_IW2_20200604T022312_VV_7C85-BURST \
-            S1_136231_IW2_20200616T022313_VV_5D11-BURST \
+            ${{ inputs.reference }}  \
+            ${{ inputs.secondary }}  \
             --looks 20x4 \
             --apply-water-mask False \
             --bucket fufiters \
-            --bucket-prefix S1_136231_IW2/20200604_20200616
+            --bucket-prefix singleburst_custom
 
       - name: Upload Hyp3 Output
         uses: actions/upload-artifact@v4
         with:
-            name: hyp3-isce2
-            path: S1*.zip
+          name: hyp3-isce2
+          path: S1*.zip
