@@ -43,6 +43,6 @@ jobs:
             S1_136231_IW2_20200604T022312_VV_7C85-BURST \
             S1_136231_IW2_20200616T022313_VV_5D11-BURST \
             --looks 20x4 \
-            --apply-water-mask False \ 
+            --apply-water-mask False \
             --bucket fufiters \
             --bucket-prefix S1_136231_IW2/20200604_20200616
