@@ -70,5 +70,5 @@ jobs:
       - name: Upload Hyp3 Output
         uses: actions/upload-artifact@v4
         with:
-          name: hyp3-isce2
+          name: ${{ env.PREFIX }}
           path: S1*.zip
