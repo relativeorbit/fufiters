@@ -47,7 +47,7 @@ jobs:
       - name: Get Bucket Prefix
         env:
           REF: ${{ inputs.reference }}
-          SEC: ${{ inputs.secondary }}
+          SEC: ${{ matrix.secondary }} 
         run: |
           PREFIX=${REF:14:8}_${SEC:14:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
