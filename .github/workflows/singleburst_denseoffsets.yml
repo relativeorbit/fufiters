@@ -61,6 +61,14 @@ jobs:
           PREFIX=${REF:14:8}_${SEC:14:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
+      # NOTE: avoids RuntimeError: context has already been set
+      # https://github.com/isce-framework/isce2/issues/146
+      - name: Patch DenseAmpcor
+        run: |
+          AMPCOR=/home/runner/micromamba/envs/hyp3-isce2/lib/python3.11/site-packages/isce/components/mroipac/ampcor/DenseAmpcor.py
+          sed -i '315,318 {s/^/#/;}' $AMPCOR
+          sed -n 312,320p $AMPCOR
+
       - name: Run Example Workflow
         env: 
             EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
