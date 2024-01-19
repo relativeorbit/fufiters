@@ -47,7 +47,7 @@ jobs:
       # https://words.yuvi.in/post/python-in-github-actions/
       - name: Search ASF for bursts
         id: asf-search
-        shell: python -u {0}
+        shell:  bash -el -c "python -u {0}"
         run: | 
           import asf_search as asf
           import os
