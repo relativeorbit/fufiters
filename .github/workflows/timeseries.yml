@@ -132,7 +132,7 @@ jobs:
           PREFIX=${BURST}/${REF:14:8}_${SEC:14:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
-      - name: Run Example Workflow
+      - name: Run Hyp3-ISCE2
         env: 
             EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
             EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD}}
