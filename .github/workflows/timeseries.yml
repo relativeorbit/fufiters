@@ -1,5 +1,6 @@
 # n+1, n+2, n+3 pairs for a given burst
 name: Timeseries
+run-name: Timeseries ${{ inputs.fullBurstID }} ${{ inputs.fullBurstID }}
 
 on:
   workflow_dispatch:
@@ -81,14 +82,6 @@ jobs:
             print(f'BURST_IDS={burstIDs}', file=f)
             print(f'MATRIX_PARAMS_COMBINATIONS={matrixJSON}', file=f)
 
-      # - name: Test Burst Output
-      #   env:
-      #     BURST_IDS: ${{ steps.asf-search.outputs.BURST_IDS }}
-      #     MATRIX: ${{ steps.asf-search.outputs.MATRIX_PARAMS_COMBINATIONS }}
-      #   run: |
-      #     #echo $BURST_IDS
-      #     echo $MATRIX
-
   hyp3-isce2:
     needs: searchASF
     runs-on: ubuntu-latest
@@ -142,7 +135,7 @@ jobs:
             python -m hyp3_isce2 ++process insar_tops_burst \
             ${{ matrix.reference }}  \
             ${{ matrix.secondary }}  \
-            --looks 20x4 \
+            --looks ${{ inputs.fullBurstID }} \
             --apply-water-mask False \
       #       --bucket fufiters \
       #       --bucket-prefix $PREFIX
