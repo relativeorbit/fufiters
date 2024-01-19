@@ -71,7 +71,9 @@ jobs:
           pairs = []
           for r in [0]:
             for s in [1,2,3]:
-              pairs.append({'reference': burstIDs[r], 'secondary': burstIDs[r+s]})
+              ref = burstIDs[r]
+              sec = burstIDs[r+s]
+              pairs.append({'reference': ref, 'secondary': sec}, 'name':f'{ref[14:22]}_{sec[14:22]}')
           matrixJSON = f'{{"include":{json.dumps(pairs)}}}'
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
@@ -95,6 +97,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.searchASF.outputs.MATRIX) }}
     continue-on-error: true
+    name: ${{ matrix.name}} 
 
     steps:
       - name: Checkout Repository
