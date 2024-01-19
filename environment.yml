@@ -1,0 +1,9 @@
+name: hyp3-stac
+channels:
+  - conda-forge
+dependencies:
+  - asf_search
+  - pystac
+  - rasterio
+  - rio-stac
+  - jsonschema
