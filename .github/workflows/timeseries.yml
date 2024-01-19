@@ -61,6 +61,8 @@ jobs:
                                fullBurstID="${{ inputs.fullBurstID }}")
           print('Results: ', len(results))
           burstIDs = [x.meta['native-id'] for x in results]
+          # Oldest First 
+          burstIDs.sort()
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
             print(f'BURST_IDS={burstIDs}', file=f)
