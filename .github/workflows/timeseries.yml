@@ -150,7 +150,8 @@ jobs:
         run: |
           # Just install couple extra dependencies for script
           # pip install pystac rasterio rio-stac jsonschema
-          python scripts/hyp3isce2stac.py
+          ls
+          python contrib/hyp3isce2stac.py
       
       - name: Upload to AWS S3
         run: | 
