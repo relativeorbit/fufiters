@@ -91,11 +91,12 @@ jobs:
     defaults:
       run:
         shell: bash -el {0}
+    strategy:
+      matrix: ${{ fromJson(needs.get-burst-list.outputs.MATRIX) }}
     steps:
-      - name: Confirm BurstIDs
-        run: |
-          #echo ${{ needs.get-burst-list.outputs.BURST_IDS }}
-          echo ${{ needs.get-burst-list.outputs.MATRIX }}
+      - run: |
+          echo reference=${{ matrix.reference }}
+          echo secondary=${{ matrix.secondary }}
 
   # hyp3-isce2-matrix:
   #   needs: get-burst-list
