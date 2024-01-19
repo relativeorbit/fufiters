@@ -30,6 +30,7 @@ on:
 
 jobs:
   searchASF:
+    name: Burst=${{ inputs.fullBurstID }}
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
@@ -99,7 +100,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-            repository: 'ASFHyP3/hyp3-isce2'
+            repository: 'relativeorbit/hyp3-isce2'
             ref: 'stac'
 
       - name: Install Conda environment with Micromamba
