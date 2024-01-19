@@ -93,12 +93,14 @@ jobs:
         shell: bash -el {0}
     strategy:
       matrix: ${{ fromJson(needs.searchASF.outputs.MATRIX) }}
+    continue-on-error: true
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
             repository: 'ASFHyP3/hyp3-isce2'
+            ref: 'stac'
 
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
@@ -140,10 +142,10 @@ jobs:
       #       --bucket fufiters \
       #       --bucket-prefix $PREFIX
 
-      - name: Create STAC Metadata
+      - name: Create COGs + STAC Metadata
         run: |
           # Just install couple extra dependencies for script
-          pip install pystac rasterio rio-stac jsonschema
+          # pip install pystac rasterio rio-stac jsonschema
           python scripts/hyp3isce2stac.py
       
       - name: Upload to AWS S3
