@@ -66,16 +66,16 @@ jobs:
           # Oldest First 
           burstIDs.sort()
 
-          # Create Matrix Job Mapping (JSON Arrays)
-          # list of dictionaries
+          # Create Matrix Job Mapping (JSON Array)
           pairs = []
           for r in [0]:
             for s in [1,2,3]:
               pairs.append({'reference': burstIDs[r], 'secondary': burstIDs[r+s]})
+          matrixJSON = f'{\"include\":[{json.dumps(pairs)}]'
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
             print(f'BURST_IDS={burstIDs}', file=f)
-            print(f'MATRIX_PARAMS_COMBINATIONS={{\"include\":[{json.dumps(pairs)}]}}'
+            print(f'MATRIX_PARAMS_COMBINATIONS={matrixJSON}', file=f)
 
       - name: Test Burst Output
         env:
