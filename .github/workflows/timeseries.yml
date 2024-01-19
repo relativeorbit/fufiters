@@ -1,6 +1,6 @@
 # n+1, n+2, n+3 pairs for a given burst
 name: Timeseries
-run-name: Timeseries ${{ inputs.fullBurstID }} ${{ inputs.fullBurstID }}
+run-name: TS ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
 
 on:
   workflow_dispatch:
