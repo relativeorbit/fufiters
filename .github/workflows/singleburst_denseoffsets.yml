@@ -69,23 +69,31 @@ jobs:
           sed -i '315,318 {s/^/#/;}' $AMPCOR
           sed -n 312,320p $AMPCOR
 
-      - name: Run Example Workflow
-        env: 
-            EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
-            EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD}}
-            ESA_USERNAME: ${{ secrets.ESA_USERNAME }}
-            ESA_PASSWORD: ${{ secrets.ESA_PASSWORD}}
+      - name: Run Hyp3-ISCE2
+        env:
+          EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD}}
+          ESA_USERNAME: ${{ secrets.ESA_USERNAME }}
+          ESA_PASSWORD: ${{ secrets.ESA_PASSWORD}}
         run: |
-            python -m hyp3_isce2 ++process insar_tops_burst \
-            ${{ inputs.reference }}  \
+          python -m hyp3_isce2 ++process insar_tops_burst \
+            {{ inputs.reference }}  \
             ${{ inputs.secondary }}  \
             --looks ${{ inputs.nlooks }} \
             --apply-water-mask False \
-            --bucket fufiters \
-            --bucket-prefix $PREFIX
+            #--bucket fufiters \
+            #--bucket-prefix $PREFIX
 
-      - name: Upload Hyp3 Output
+      - name: Create STAC Metadata
+        run: |
+          python create_stac_item.py 
+      
+      - name: Upload to AWS S3
+        run: | 
+          aws s3 sync S1_* s3://fufiters/$PREFIX
+
+      - name: Upload to GitHub Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: hyp3-isce2
+          name: ${{ env.PREFIX }}
           path: S1*.zip
