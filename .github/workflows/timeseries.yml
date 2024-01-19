@@ -33,7 +33,8 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      BURST_IDS: ${{ steps.asf-search.outputs.BURST_IDS  }}
+      BURST_IDS: ${{ steps.asf-search.outputs.BURST_IDS }}
+      MATRIX: ${{ steps.asf-search.outputs.MATRIX_PARAMS_COMBINATIONS }}
     defaults:
       run:
         shell: bash -el {0}
@@ -53,6 +54,7 @@ jobs:
         shell:  bash -el -c "python -u {0}"
         run: | 
           import asf_search as asf
+          import json
           import os
 
           results = asf.search(platform=[asf.PLATFORM.SENTINEL1], 
@@ -64,14 +66,24 @@ jobs:
           # Oldest First 
           burstIDs.sort()
 
+          # Create Matrix Job Mapping (JSON Arrays)
+          # list of dictionaries
+          pairs = []
+          for r in [0]:
+            for s in [1,2,3]:
+              pairs.append({'reference': burstIDs[r], 'secondary': burstIDs[r+s]})
+
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
             print(f'BURST_IDS={burstIDs}', file=f)
+            print(f'MATRIX_PARAMS_COMBINATIONS={{\"include\":[{json.dumps(pairs)}]}}'
 
       - name: Test Burst Output
         env:
           BURST_IDS: ${{ steps.asf-search.outputs.BURST_IDS }}
+          MATRIX: ${{ steps.asf-search.outputs.MATRIX_PARAMS_COMBINATIONS }}
         run: |
-          echo $BURST_IDS
+          #echo $BURST_IDS
+          echo $MATRIX
 
   pass-burst-list:
     needs: get-burst-list
@@ -81,7 +93,9 @@ jobs:
         shell: bash -el {0}
     steps:
       - name: Confirm BurstIDs
-        run: echo ${{ needs.get-burst-list.outputs.BURST_IDS }}
+        run: |
+          #echo ${{ needs.get-burst-list.outputs.BURST_IDS }}
+          echo ${{ needs.get-burst-list.outputs.MATRIX }}
 
   # hyp3-isce2-matrix:
   #   needs: get-burst-list
