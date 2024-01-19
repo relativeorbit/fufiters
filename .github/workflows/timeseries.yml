@@ -120,8 +120,9 @@ jobs:
         env:
           REF: ${{ matrix.reference }}
           SEC: ${{ matrix.secondary }} 
+          BURST: ${{ inputs.fullBurstID }}
         run: |
-          PREFIX=${REF:14:8}_${SEC:14:8}
+          PREFIX=${BURST}/${REF:14:8}_${SEC:14:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
       - name: Run Example Workflow
@@ -141,6 +142,8 @@ jobs:
 
       - name: Create STAC Metadata
         run: |
+          # Just install couple extra dependencies for script
+          pip install pystac rasterio rio-stac jsonschema
           python scripts/hyp3isce2stac.py
       
       - name: Upload to AWS S3
