@@ -135,7 +135,7 @@ jobs:
             python -m hyp3_isce2 ++process insar_tops_burst \
             ${{ matrix.reference }}  \
             ${{ matrix.secondary }}  \
-            --looks ${{ inputs.fullBurstID }} \
+            --looks ${{ inputs.nlooks }} \
             --apply-water-mask False \
       #       --bucket fufiters \
       #       --bucket-prefix $PREFIX
