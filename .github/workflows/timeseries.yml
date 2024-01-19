@@ -71,7 +71,7 @@ jobs:
           for r in [0]:
             for s in [1,2,3]:
               pairs.append({'reference': burstIDs[r], 'secondary': burstIDs[r+s]})
-          matrixJSON = f'{{"include":[{json.dumps(pairs)}]}}'
+          matrixJSON = f'{{"include":{json.dumps(pairs)}}}'
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
             print(f'BURST_IDS={burstIDs}', file=f)
