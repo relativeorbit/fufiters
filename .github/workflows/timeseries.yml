@@ -54,8 +54,8 @@ jobs:
 
           results = asf.search(platform=[asf.PLATFORM.SENTINEL1], 
                                processingLevel=asf.BURST, 
-                               polarization=${{ inputs.polarization }},
-                               fullBurstID=${{ inputs.fullBurstID }})
+                               polarization="${{ inputs.polarization }}",
+                               fullBurstID="${{ inputs.fullBurstID }}")
           print('Results: ', len(results))
           burstIDs = [x.meta['native-id'] for x in results]
 
