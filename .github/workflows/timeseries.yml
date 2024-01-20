@@ -28,6 +28,15 @@ on:
           - 20x4
           - 10x2
           - 5x1
+      npairs:
+        type: choice
+        required: true
+        description: Number of Pairs per Reference
+        default: 3
+        options: 
+          - 1
+          - 2
+          - 3
 
 jobs:
   searchASF:
@@ -63,20 +72,24 @@ jobs:
                                processingLevel=asf.BURST, 
                                polarization="${{ inputs.polarization }}",
                                fullBurstID="${{ inputs.fullBurstID }}")
-          print('Results: ', len(results))
+          print('Number of Acquisitions: ', len(results))
           burstIDs = [x.meta['native-id'] for x in results]
           # Oldest First 
           burstIDs.sort()
+          print('first: ', burstIDs[0])
+          print('last: ', burstIDs[-1])
 
           # Create Matrix Job Mapping (JSON Array)
+          # NOTE: only up to (current-npairs) for sufficient connections & precise orbits
           pairs = []
-          for r in [0]:
-            for s in [1,2,3]:
+          for r in range(len(burstIDs) - ${{ inputs.npairs }}):
+            for s in range(1, ${{ inputs.npairs }} + 1 ):
               ref = burstIDs[r]
               sec = burstIDs[r+s]
               shortname = f'{ref[14:22]}_{sec[14:22]}'
               pairs.append({'reference': ref, 'secondary': sec, 'name':shortname})
           matrixJSON = f'{{"include":{json.dumps(pairs)}}}'
+          print(f'Number of Interferograms: len(pairs)')
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
             print(f'BURST_IDS={burstIDs}', file=f)
