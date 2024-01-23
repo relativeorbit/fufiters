@@ -12,12 +12,12 @@ on:
         type: string
         required: true
         description: Secondary Burst
-        default: S1_023790_IW1_20230703T121427_VV_F9AB-BURST
+        default: S1_023790_IW1_20231218T121430_VV_B9A6-BURST
       nlooks:
           type: choice
           required: true
           description: Range x Azimuth Looks
-          default: 5x1
+          default: 20x4
           options: 
             - 20x4
             - 10x2
@@ -61,14 +61,6 @@ jobs:
           PREFIX=${REF:14:8}_${SEC:14:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
-      # NOTE: avoids RuntimeError: context has already been set
-      # https://github.com/isce-framework/isce2/issues/146
-      - name: Patch DenseAmpcor
-        run: |
-          AMPCOR=/home/runner/micromamba/envs/hyp3-isce2/lib/python3.11/site-packages/isce/components/mroipac/ampcor/DenseAmpcor.py
-          sed -i '315,318 {s/^/#/;}' $AMPCOR
-          sed -n 312,320p $AMPCOR
-
       - name: Run Hyp3-ISCE2
         env:
           EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
@@ -84,16 +76,17 @@ jobs:
             #--bucket fufiters \
             #--bucket-prefix $PREFIX
 
-      - name: Create STAC Metadata
-        run: |
-          python create_stac_item.py 
+      # - name: Create STAC Metadata
+      #   run: |
+      #     python create_stac_item.py 
       
       - name: Upload to AWS S3
         run: | 
-          aws s3 sync S1_* s3://fufiters/$PREFIX
+          OUTDIR=`ls -d S1_*`
+          aws s3 sync $OUTDIR s3://fufiters/offsets/$PREFIX/$OUTDIR
 
-      - name: Upload to GitHub Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.PREFIX }}
-          path: S1*.zip
+      # - name: Upload to GitHub Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ env.PREFIX }}
+      #     path: S1*.zip
