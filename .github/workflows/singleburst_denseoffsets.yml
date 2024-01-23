@@ -69,10 +69,10 @@ jobs:
           ESA_PASSWORD: ${{ secrets.ESA_PASSWORD}}
         run: |
           python -m hyp3_isce2 ++process insar_tops_burst \
-            {{ inputs.reference }}  \
+            ${{ inputs.reference }}  \
             ${{ inputs.secondary }}  \
             --looks ${{ inputs.nlooks }} \
-            --apply-water-mask False \
+            --apply-water-mask False 
             #--bucket fufiters \
             #--bucket-prefix $PREFIX
 
