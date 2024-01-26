@@ -127,10 +127,13 @@ jobs:
           pairs = []
           for r in range(idx_end_of_year + 1):
             for s in range(1, ${{ inputs.npairs }} + 1 ):
-              ref = burstIDs[r]
-              sec = burstIDs[r+s]
-              shortname = f'{ref[17:25]}_{sec[17:25]}'
-              pairs.append({'reference': ref, 'secondary': sec, 'name':shortname})
+              try:
+                ref = burstIDs[r]
+                sec = burstIDs[r+s]
+                shortname = f'{ref[17:25]}_{sec[17:25]}'
+                pairs.append({'reference': ref, 'secondary': sec, 'name':shortname})
+              except IndexError as e:
+                print(f'ASF Search did not return a n+{s} pair for {ref}')
           matrixJSON = f'{{"include":{json.dumps(pairs)}}}'
           print(f'Number of Interferograms: {len(pairs)}')
           print(matrixJSON)
