@@ -93,7 +93,7 @@ jobs:
 
           # Search for SLCs
           results = asf.search(platform=[asf.PLATFORM.SENTINEL1], 
-                               processingLevel=asf.SLC, 
+                               processingLevel=asf.PRODUCT_TYPE.SLC, 
                                beamMode=asf.BEAMMODE.IW,
                                intersectsWith=gfb.iloc[0].geometry.centroid.wkt,
                                relativeOrbit=int(RELORB),
