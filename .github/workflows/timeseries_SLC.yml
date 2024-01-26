@@ -86,10 +86,10 @@ jobs:
           # Get centroid of burst from database 
           url = 'https://github.com/relativeorbit/s1burstids/raw/main/burst_map_IW_000001_375887_brotli.parquet'
           with fsspec.open(url) as file:
-          gfb = gpd.read_parquet(file,
-                                 filters=[('burst_id', '=', int(BURSTID)),
-                                          ('subswath_name', '=', SUBSWATH)]
-                                )
+            gfb = gpd.read_parquet(file,
+                                  filters=[('burst_id', '=', int(BURSTID)),
+                                            ('subswath_name', '=', SUBSWATH)]
+                                  )
 
           # Search for SLCs
           results = asf.search(platform=[asf.PLATFORM.SENTINEL1], 
