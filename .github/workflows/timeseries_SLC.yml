@@ -125,7 +125,7 @@ jobs:
           # Create Matrix Job Mapping (JSON Array)
           idx_end_of_year = gf.index[gf.datetime.dt.year == START][-1]
           pairs = []
-          for r in range(idx_end_of_year):
+          for r in range(idx_end_of_year + 1):
             for s in range(1, ${{ inputs.npairs }} + 1 ):
               ref = burstIDs[r]
               sec = burstIDs[r+s]
