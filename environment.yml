@@ -7,3 +7,7 @@ dependencies:
   - rasterio
   - rio-stac
   - jsonschema
+  - geopandas
+  - pyarrow
+  - fsspec
+  - aiohttp
