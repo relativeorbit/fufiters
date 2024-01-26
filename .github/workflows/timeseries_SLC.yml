@@ -46,7 +46,7 @@ env:
 
 jobs:
   searchASF:
-    name: Burst=${{ env.FullBurstID }}
+    name: Burst=${{ inputs.fullBurstID }}
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
