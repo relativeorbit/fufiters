@@ -82,6 +82,7 @@ jobs:
           POL = os.environ['Polarization']
           FULLBURSTID = os.environ['FullBurstId']
           RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')
+          print(RELORB,BURSTID,SUBSWATH)
 
           # Get centroid of burst from database 
           url = 'https://github.com/relativeorbit/s1burstids/raw/main/burst_map_IW_000001_375887_brotli.parquet'
@@ -90,6 +91,7 @@ jobs:
                                   filters=[('burst_id', '=', int(BURSTID)),
                                             ('subswath_name', '=', SUBSWATH)]
                                   )
+          print(gfb)
 
           # Search for SLCs
           results = asf.search(platform=[asf.PLATFORM.SENTINEL1], 
@@ -101,6 +103,7 @@ jobs:
                                end=f"{END}-01-01",
                               )
           gf = gpd.GeoDataFrame.from_features(results.geojson(), crs=4326)
+          print('Results:' len(gf))
 
           # For case of frame overlap, ensure SLCs contain full burst
           def get_overlap_area(gf, gfREF):
