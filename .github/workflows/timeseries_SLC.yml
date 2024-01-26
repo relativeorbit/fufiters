@@ -113,7 +113,7 @@ jobs:
             return overlaps
 
           gf['overlap'] = get_overlap_area(gf, gfb)
-          gf = gf.query('overlap >= 0.95').reset_index(drop=True)
+          gf = gf.query('overlap >= 0.80').reset_index(drop=True)
 
           print('Number of Acquisitions: ', len(gf))
           burstIDs = gf.sceneName.to_list()
