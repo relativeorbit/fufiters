@@ -70,7 +70,7 @@ jobs:
           REF: ${{ inputs.reference }}
           SEC: ${{ inputs.secondary }}
         run: |
-          PREFIX=${REF:14:8}_${SEC:14:8}
+          PREFIX=${REF:17:25}_${SEC:17:25}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
       - name: Run Hyp3-ISCE2
@@ -87,8 +87,6 @@ jobs:
             --polarization ${{ inputs.polarization }} \
             --looks ${{ inputs.nlooks }} \
             --apply-water-mask False 
-            #--bucket fufiters \
-            #--bucket-prefix $PREFIX
 
       # - name: Create STAC Metadata
       #   run: |
