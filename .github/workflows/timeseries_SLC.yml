@@ -37,11 +37,11 @@ on:
 
 # Convert inputs to environment variables for all job steps
 env:
-  FullBurstId = ${{ inputs.fullBurstID }}
-  Year = ${{ inputs.year }}
-  Polarization = ${{ inputs.polarization }}
-  NLooks = ${{ inputs.nlooks }}
-  NPairs = ${{ inputs.npairs }}
+  FullBurstId: ${{ inputs.fullBurstID }}
+  Year: ${{ inputs.year }}
+  Polarization: ${{ inputs.polarization }}
+  NLooks: ${{ inputs.nlooks }}
+  NPairs: ${{ inputs.npairs }}
 
 
 jobs:
