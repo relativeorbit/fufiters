@@ -46,7 +46,6 @@ env:
 
 jobs:
   searchASF:
-    name: Burst=${{ inputs.fullBurstID }}
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
@@ -115,15 +114,18 @@ jobs:
           gf['overlap'] = get_overlap_area(gf, gfb)
           gf = gf.query('overlap >= 0.80').reset_index(drop=True)
 
+          # Sort chronological ascending
+          gf['datetime'] = gpd.pd.to_datetime(gf.startTime)
+          gf = gf.sort_values(by='datetime', ignore_index=True)
+
           print('Number of Acquisitions: ', len(gf))
           burstIDs = gf.sceneName.to_list()
-          burstIDs.sort()
           print('\n'.join(burstIDs))
 
           # Create Matrix Job Mapping (JSON Array)
-          # NOTE: only up to (current-npairs) for sufficient connections & precise orbits
+          idx_end_of_year = gf.index[gf.datetime.dt.year == START][-1]
           pairs = []
-          for r in range(len(burstIDs) - ${{ inputs.npairs }}):
+          for r in range(idx_end_of_year):
             for s in range(1, ${{ inputs.npairs }} + 1 ):
               ref = burstIDs[r]
               sec = burstIDs[r+s]
@@ -176,8 +178,9 @@ jobs:
           REF: ${{ matrix.reference }}
           SEC: ${{ matrix.secondary }} 
           BURST: ${{ inputs.fullBurstID }}
+          YEAR: ${{ inputs.year }} 
         run: |
-          PREFIX=${BURST}/${REF:17:8}_${SEC:17:8}
+          PREFIX=${BURST}/${YEAR}/${REF:17:8}_${SEC:17:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
       - name: Run Hyp3-ISCE2
@@ -207,7 +210,7 @@ jobs:
           OUTDIR=`ls -d S1_*`
           aws s3 sync $OUTDIR s3://fufiters/backprocess/$PREFIX/$OUTDIR
 
-      # - name: Upload Hyp3 Output
+      # - name: Upload Hyp3 Output to GitHub
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: ${{ env.PREFIX }}
