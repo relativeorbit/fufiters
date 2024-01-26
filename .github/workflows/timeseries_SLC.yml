@@ -1,6 +1,6 @@
 # n+1, n+2, n+3 pairs for a given burst + year
 name: TimeseriesSLC
-run-name: TS ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
+run-name: Phase ${{ inputs.year }}  ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }} ${{ inputs.npairs }} 
 
 on:
   workflow_dispatch:
