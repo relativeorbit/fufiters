@@ -100,7 +100,7 @@ jobs:
                                intersectsWith=gfb.iloc[0].geometry.centroid.wkt,
                                relativeOrbit=int(RELORB),
                                start=f"{START}-01-01",
-                               end=f"{END}-01-01",
+                               end=f"{END}-03-01", #march to ensure we get some overlapping coverage for each year
                               )
           gf = gpd.GeoDataFrame.from_features(results.geojson(), crs=4326)
           print('Results:', len(gf))
