@@ -127,10 +127,11 @@ jobs:
             for s in range(1, ${{ inputs.npairs }} + 1 ):
               ref = burstIDs[r]
               sec = burstIDs[r+s]
-              shortname = f'{ref[14:22]}_{sec[14:22]}'
+              shortname = f'{ref[17:25]}_{sec[17:25]}'
               pairs.append({'reference': ref, 'secondary': sec, 'name':shortname})
           matrixJSON = f'{{"include":{json.dumps(pairs)}}}'
           print(f'Number of Interferograms: {len(pairs)}')
+          print(matrixJSON)
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
             print(f'BURST_IDS={burstIDs}', file=f)
@@ -176,7 +177,7 @@ jobs:
           SEC: ${{ matrix.secondary }} 
           BURST: ${{ inputs.fullBurstID }}
         run: |
-          PREFIX=${BURST}/${REF:17:25}_${SEC:17:25}
+          PREFIX=${BURST}/${REF:17:8}_${SEC:17:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
       - name: Run Hyp3-ISCE2
