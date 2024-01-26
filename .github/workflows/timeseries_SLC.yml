@@ -87,10 +87,9 @@ jobs:
           url = 'https://github.com/relativeorbit/s1burstids/raw/main/burst_map_IW_000001_375887_brotli.parquet'
           with fsspec.open(url) as file:
           gfb = gpd.read_parquet(file,
-                          filters=[('burst_id', '=', int(BURSTID),
-                                   ('subswath_name', '=', SUBSWATH)
-                          ]
-                          )
+                                 filters=[('burst_id', '=', int(BURSTID)),
+                                          ('subswath_name', '=', SUBSWATH)]
+                                )
 
           # Search for SLCs
           results = asf.search(platform=[asf.PLATFORM.SENTINEL1], 
@@ -101,10 +100,10 @@ jobs:
                                start=f"{START}-01-01",
                                end=f"{END}-01-01",
                               )
+          gf = gpd.GeoDataFrame.from_features(results.geojson(), crs=4326)
 
           # For case of frame overlap, ensure SLCs contain full burst
           def get_overlap_area(gf, gfREF):
-            # want frames with > 10% overlap
             frame_area = gfREF.iloc[0].geometry.area
             overlaps = gf.geometry.map(lambda x: x.intersection(gfREF.geometry.iloc[0]).area/frame_area)
 
@@ -113,7 +112,7 @@ jobs:
           gf['overlap'] = get_overlap_area(gf, gfb)
           gf = gf.query('overlap >= 0.95').reset_index(drop=True)
 
-          print('Number of Acquisitions: ', len(results))
+          print('Number of Acquisitions: ', len(gf))
           burstIDs = gf.sceneName.to_list()
           burstIDs.sort()
           print('\n'.join(burstIDs))
