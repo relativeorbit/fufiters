@@ -70,7 +70,7 @@ jobs:
           REF: ${{ inputs.reference }}
           SEC: ${{ inputs.secondary }}
         run: |
-          PREFIX=${REF:17:25}_${SEC:17:25}
+          PREFIX=${REF:17:8}_${SEC:17:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
 
       - name: Run Hyp3-ISCE2
