@@ -1,6 +1,6 @@
 # ~n+3, n+6, n+9 mo for a given date
 name: TimeseriesSLCOffsets
-run-name: Phase ${{ inputs.year }}  ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }} ${{ inputs.npairs }} 
+run-name: Offsets ${{ inputs.year }}  ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }} ${{ inputs.npairs }} 
 
 on:
   workflow_dispatch:
@@ -127,8 +127,8 @@ jobs:
           pairs = []
           for r in range(idx_end_of_year + 1):
             for s in range(1, ${{ inputs.npairs }} + 1 ):
-              # roughly every 4 months
-              step = int(len(gf)/4)*s
+              # roughly every 3 months (for 30ac/year)
+              step = int(len(gf)/5)*s
               try:
                 ref = burstIDs[r]
                 sec = burstIDs[r+step]
