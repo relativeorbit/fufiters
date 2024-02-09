@@ -25,7 +25,7 @@ on:
         type: choice
         required: true
         description: Range x Azimuth Looks
-        default: '20x4'
+        default: '5x1'
         options: ['20x4','10x2','5x1']
 
 
@@ -113,6 +113,7 @@ jobs:
           print('\n'.join(burstIDs))
 
           # Create Matrix Job Mapping (JSON Array)
+          pairs = []
           gf.set_index('datetime', inplace=True, drop=False)
           for index,row in gf.iterrows():
             dt = gf.index[-1] - index
