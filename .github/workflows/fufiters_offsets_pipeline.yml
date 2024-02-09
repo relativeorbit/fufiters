@@ -1,0 +1,47 @@
+# Try resuable workflow pipeline for 256+ offset pairs
+name: FufitersOffsetsPipeline
+run-name: Offsets ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      fullBurstID:
+          type: string
+          required: true
+          description: ESA Burst Identifier (RelativeObit, ID, Subswath)
+          default: '012_023790_IW1'
+      polarization:
+          type: choice
+          required: true
+          description: Polarization
+          default: 'VV'
+          options: ['VV', 'VH', 'HH']
+      nlooks:
+          type: choice
+          required: true
+          description: Range x Azimuth Looks
+          default: '20x4'
+          options: ['20x4','10x2','5x1']
+
+jobs:
+    denseOffsets3:
+        uses: ./.github/workflows/fufiters_denseoffsets.yml
+        with: 
+            fullBurstID: ${{ inputs.fullBurstID }}
+            polarization: ${{ inputs.polarization }}
+            nlooks: ${{ inputs.nlooks }}
+            dt: 3
+    denseOffsets6:
+        uses: ./.github/workflows/fufiters_denseoffsets.yml
+        with: 
+            fullBurstID: ${{ inputs.fullBurstID }}
+            polarization: ${{ inputs.polarization }}
+            nlooks: ${{ inputs.nlooks }}
+            dt: 6
+    denseOffsets8:
+        uses: ./.github/workflows/fufiters_denseoffsets.yml
+        with: 
+            fullBurstID: ${{ inputs.fullBurstID }}
+            polarization: ${{ inputs.polarization }}
+            nlooks: ${{ inputs.nlooks }}
+            dt: 8

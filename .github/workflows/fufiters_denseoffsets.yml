@@ -1,4 +1,4 @@
-# ~n+dt in years for a given date
+# Try reusable workflow
 name: FufitersOffsets
 run-name: Offsets ${{ inputs.fullBurstID }} ${{ inputs.dt }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
 
@@ -27,6 +27,22 @@ on:
         description: Range x Azimuth Looks
         default: '5x1'
         options: ['20x4','10x2','5x1']
+
+  # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
+  workflow_call:
+    inputs:
+      fullBurstID:
+        type: string
+        required: true
+      polarization:
+        type: string
+        required: true
+      dt:
+        type: string
+        required: true
+      nlooks:
+        type: string
+        required: true
 
 
 # Convert inputs to environment variables for all job steps
