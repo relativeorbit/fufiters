@@ -24,20 +24,20 @@ on:
           options: ['20x4','10x2','5x1']
 
 jobs:
-    denseOffsets3:
-        uses: ./.github/workflows/fufiters_denseoffsets.yml
-        with: 
-            fullBurstID: ${{ inputs.fullBurstID }}
-            polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.nlooks }}
-            dt: 3
-    denseOffsets6:
-        uses: ./.github/workflows/fufiters_denseoffsets.yml
-        with: 
-            fullBurstID: ${{ inputs.fullBurstID }}
-            polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.nlooks }}
-            dt: 6
+    # denseOffsets3:
+    #     uses: ./.github/workflows/fufiters_denseoffsets.yml
+    #     with: 
+    #         fullBurstID: ${{ inputs.fullBurstID }}
+    #         polarization: ${{ inputs.polarization }}
+    #         nlooks: ${{ inputs.nlooks }}
+    #         dt: 3
+    # denseOffsets6:
+    #     uses: ./.github/workflows/fufiters_denseoffsets.yml
+    #     with: 
+    #         fullBurstID: ${{ inputs.fullBurstID }}
+    #         polarization: ${{ inputs.polarization }}
+    #         nlooks: ${{ inputs.nlooks }}
+    #         dt: 6
     denseOffsets8:
         uses: ./.github/workflows/fufiters_denseoffsets.yml
         with: 
@@ -45,3 +45,4 @@ jobs:
             polarization: ${{ inputs.polarization }}
             nlooks: ${{ inputs.nlooks }}
             dt: 8
+        secrets: inherit
