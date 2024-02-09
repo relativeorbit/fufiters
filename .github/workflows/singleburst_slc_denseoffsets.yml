@@ -1,5 +1,6 @@
 # Extract bursts from SLCs & run denseOffsets
 name: SingleBurstSLCDenseOffsets
+run-name: ${{ inputs.BurstID }} ${{ inputs.reference }} ${{ inputs.secondary }} 
 
 on:
   workflow_dispatch:
