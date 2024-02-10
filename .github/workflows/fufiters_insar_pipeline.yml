@@ -1,6 +1,6 @@
 # Try resuable workflow pipeline for 256+ offset pairs
 name: FufitersInSARPipeline
-run-name: Offsets ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
+run-name: InSAR ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }} ${{ inputs.npairs }}
 
 on:
   workflow_dispatch:
@@ -30,12 +30,13 @@ on:
         options: ['3','2','1']
 
 jobs:
-    process_years_matrix:
+    timeseries:
         strategy:
             matrix:
                 #year: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
                 # Test with just 3
                 year: [2023, 2024]
+
         uses: ./.github/workflows/timeseries_SLC.yml
         with: 
             fullBurstID: ${{ inputs.fullBurstID }}
