@@ -1,0 +1,48 @@
+# Try resuable workflow pipeline for 256+ offset pairs
+name: FufitersInSARPipeline
+run-name: Offsets ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      fullBurstID:
+        type: string
+        required: true
+        description: ESA Burst Identifier (RelativeObit, ID, Subswath)
+        default: '012_023790_IW1'
+      polarization:
+        type: choice
+        required: true
+        description: Polarization
+        default: 'VV'
+        options: ['VV', 'VH', 'HH']
+      nlooks:
+        type: choice
+        required: true
+        description: Range x Azimuth Looks
+        default: '20x4'
+        options: ['20x4','10x2','5x1']
+      npairs:
+        type: choice
+        required: true
+        description: Number of Pairs per Reference
+        default: '3'
+        options: ['3','2','1']
+
+jobs:
+    process_years:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                #year: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+                # Test with just 3
+                year: [2023, 2024]
+            uses: ./.github/workflows/timeseries_SLC.yml
+            with: 
+                fullBurstID: ${{ inputs.fullBurstID }}
+                year: ${{ matrix.year }}
+                polarization: ${{ inputs.polarization }}
+                nlooks: ${{ inputs.nlooks }}
+                npairs: ${{ inputs.npairs }}
+            secrets: inherit

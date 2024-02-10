@@ -1,4 +1,4 @@
-# Try reusable workflow
+# ~n+dt in years for a given date
 name: FufitersOffsets
 run-name: Offsets ${{ inputs.fullBurstID }} ${{ inputs.dt }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
 

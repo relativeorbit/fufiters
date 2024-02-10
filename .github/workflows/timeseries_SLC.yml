@@ -33,6 +33,25 @@ on:
         description: Number of Pairs per Reference
         default: '3'
         options: ['3','2','1']
+  
+  # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
+  workflow_call:
+    inputs:
+      fullBurstID:
+        type: string
+        required: true
+      polarization:
+        type: string
+        required: true
+      year:
+        type: string
+        required: true
+      nlooks:
+        type: string
+        required: true
+      npairs:
+        type: string
+        required: true
 
 
 # Convert inputs to environment variables for all job steps
