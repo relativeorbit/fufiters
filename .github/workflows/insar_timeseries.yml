@@ -98,7 +98,7 @@ jobs:
           START = int(os.environ['Year'])
           END = START+1
           POL = os.environ['Polarization']
-          FULLBURSTID = os.environ['FullBurstId']
+          FULLBURSTID = os.environ['burstId']
           RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')
           print(RELORB,BURSTID,SUBSWATH)
 
