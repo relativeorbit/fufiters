@@ -33,6 +33,25 @@ gh -R relativeorbit/fufiters workflow run singleburst_SLC.yml \
 Note: to select SLC names you can use https://search.asf.alaska.edu or use ASF's Python Client https://github.com/asfadmin/Discovery-asf_search
 
 
+##### Run workflow locally
+You must first install a specific branch of hyp3-isce2:
+```
+git clone https://github.com/relativeorbit/hyp3-isce2.git
+cd hyp3-isce2
+mamba env create -f environment.yml
+git checkout backprocess 
+pip install -e .
+
+cd /tmp
+python -m hyp3_isce2 ++process insar_tops_fufiters \
+  S1A_IW_SLC__1SDV_20190101T121401_20190101T121429_025284_02CBEB_65D7 \
+  S1A_IW_SLC__1SDV_20190113T121401_20190113T121429_025459_02D234_3311 \
+  --burstId 012_023790_IW1 \
+  --looks 5x1 \ 
+  --apply-water-mask False
+```
+
+
 #### Generate a set of interferograms for all years
 
 

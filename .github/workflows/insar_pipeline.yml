@@ -1,11 +1,11 @@
 # Try resuable workflow pipeline for 256+ offset pairs
-name: FufitersInSARPipeline
-run-name: InSAR ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }} ${{ inputs.npairs }}
+name: InSAR_Pipeline
+run-name: ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }}
 
 on:
   workflow_dispatch:
     inputs:
-      fullBurstID:
+      burstId:
         type: string
         required: true
         description: ESA Burst Identifier (RelativeObit, ID, Subswath)
@@ -16,7 +16,7 @@ on:
         description: Polarization
         default: 'VV'
         options: ['VV', 'VH', 'HH']
-      nlooks:
+      looks:
         type: choice
         required: true
         description: Range x Azimuth Looks
@@ -37,11 +37,11 @@ jobs:
                 # Test with just 3
                 year: [2023, 2024]
 
-        uses: ./.github/workflows/timeseries_SLC.yml
+        uses: ./.github/workflows/insar_timeseries.yml
         with: 
-            fullBurstID: ${{ inputs.fullBurstID }}
+            burstId: ${{ inputs.burstId }}
             year: ${{ matrix.year }}
             polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.nlooks }}
+            looks: ${{ inputs.looks }}
             npairs: ${{ inputs.npairs }}
         secrets: inherit

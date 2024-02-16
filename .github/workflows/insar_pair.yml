@@ -1,6 +1,6 @@
 # Extract bursts from SLCs
 name: InSAR_Pair
-run-name: ${{ inputs.BurstID }} 
+run-name: ${{ inputs.burstId }} 
 
 on:
   workflow_dispatch:
@@ -40,6 +40,11 @@ on:
         required: true
         description: Shorthand jobname (e.g. 20230621_20230703)
         default: hyp3-isce2
+      s3bucket:
+          type: string
+          required: false
+          description: Output S3 Bucket Prefix (e.g. testing, production, etc)
+          default: 's3://fufiters/testing'
 
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
@@ -63,6 +68,9 @@ on:
         type: string
         required: true
       jobname:
+        type: string
+        required: false
+      s3bucket:
         type: string
         required: false
 
@@ -98,14 +106,6 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-west-2
 
-      - name: Get Bucket Prefix
-        env:
-          REF: ${{ inputs.reference }}
-          SEC: ${{ inputs.secondary }}
-        run: |
-          PREFIX=${REF:17:25}_${SEC:17:25}
-          echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
-
       - name: Run Hyp3-ISCE2
         env:
           EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
@@ -121,17 +121,31 @@ jobs:
             --looks ${{ inputs.looks }} \
             --apply-water-mask False 
 
-      - name: Create STAC Metadata
+      - name: Report Machine Stats
         run: |
-          python scripts/hyp3isce2stac.py 
+          nproc
+          free -h
+          df -h
+          pwd
+          ls -ltrh 
+
+      - name: Get Dates for Output Subfolder Name
+        env:
+          REF: ${{ inputs.reference }}
+          SEC: ${{ inputs.secondary }}
+        run: |
+          PREFIX=${REF:17:25}_${SEC:17:25}
+          echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
       
+      # TODO: add conditional for s3bucket?
       - name: Upload to AWS S3
         run: | 
           OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR s3://fufiters/backprocess/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR ${{ inputs.s3bucket }}/$PREFIX/$OUTDIR
 
-      # - name: Upload to GitHub Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ env.PREFIX }}
-      #     path: S1*.zip
+      #TODO: boolean flag to save to GitHub Artifacts?
+      - name: Upload to GitHub Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PREFIX }}
+          path: S1*.zip
