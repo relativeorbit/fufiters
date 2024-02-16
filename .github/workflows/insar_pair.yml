@@ -1,6 +1,6 @@
 # Extract bursts from SLCs
-name: SingleBurstSLC
-run-name: ${{ inputs.BurstID }} ${{ inputs.reference }} ${{ inputs.secondary }} 
+name: InSAR_Pair
+run-name: ${{ inputs.BurstID }} 
 
 on:
   workflow_dispatch:

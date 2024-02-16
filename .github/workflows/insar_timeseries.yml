@@ -1,5 +1,5 @@
 # n+1, n+2, n+3 pairs for a given burst + year
-name: TimeseriesSLC
+name: InSAR_Timeseries
 run-name: Phase ${{ inputs.year }}  ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }} 
 
 on:
@@ -166,10 +166,12 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.searchASF.outputs.MATRIX) }}
     uses: ./.github/workflows/insar_pair.yml
-    with: 
-        burstId: ${{ inputs.burstId }}
-        year: ${{ matrix.year }}
-        polarization: ${{ inputs.polarization }}
-        looks: ${{ inputs.looks }}
-        jobname: ${{ matrix.name }}
+    with:
+      reference: ${{ matrix.reference }}
+      secondary: ${{ matrix.secondary }} 
+      burstId: ${{ inputs.burstId }}
+      year: ${{ matrix.year }}
+      polarization: ${{ inputs.polarization }}
+      looks: ${{ inputs.looks }}
+      jobname: ${{ matrix.name }}
     secrets: inherit
