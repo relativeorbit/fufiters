@@ -40,11 +40,6 @@ on:
         required: true
         description: Shorthand jobname (e.g. 20230621_20230703)
         default: hyp3-isce2
-      s3bucket:
-          type: string
-          required: false
-          description: Output S3 Bucket Prefix (e.g. testing, production, etc)
-          default: 's3://fufiters/testing'
 
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
@@ -68,9 +63,6 @@ on:
         type: string
         required: true
       jobname:
-        type: string
-        required: false
-      s3bucket:
         type: string
         required: false
 
@@ -134,14 +126,14 @@ jobs:
           REF: ${{ inputs.reference }}
           SEC: ${{ inputs.secondary }}
         run: |
-          PREFIX=${REF:17:25}_${SEC:17:25}
+          PREFIX=${REF:17:8}_${SEC:17:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
       
-      # TODO: add conditional for s3bucket?
+      # TODO: add conditional for s3bucket / change testing->production when ready
       - name: Upload to AWS S3
         run: | 
           OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR ${{ inputs.s3bucket }}/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR s3://fufiters/testing/$PREFIX/$OUTDIR
 
       #TODO: boolean flag to save to GitHub Artifacts?
       - name: Upload to GitHub Artifact

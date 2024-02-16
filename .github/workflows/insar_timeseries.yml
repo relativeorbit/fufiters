@@ -92,6 +92,7 @@ jobs:
   hyp3-isce2:
     needs: searchASF
     strategy:
+      fail-fast: false
       matrix: ${{ fromJson(needs.searchASF.outputs.MATRIX) }}
     uses: ./.github/workflows/insar_pair.yml
     with:
