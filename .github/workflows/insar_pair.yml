@@ -134,11 +134,11 @@ jobs:
       - name: Upload to AWS S3
         run: | 
           OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR s3://fufiters/testing/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR s3://fufiters/testing/insar/$PREFIX/$OUTDIR
 
       #TODO: boolean flag to save to GitHub Artifacts?
       - name: Upload to GitHub Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PREFIX }}
-          path: S1*.zip
+          path: S1_*INT*
