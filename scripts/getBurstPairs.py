@@ -10,6 +10,8 @@ START = int(os.environ['Year'])
 END = START+1
 POL = os.environ['Polarization']
 FULLBURSTID = os.environ['FullBurstId']
+NPAIRS = int(os.environ['NPairs'])
+
 RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')
 print(RELORB,BURSTID,SUBSWATH)
 
@@ -56,7 +58,7 @@ print('\n'.join(burstIDs))
 idx_end_of_year = gf.index[gf.datetime.dt.year == START][-1]
 pairs = []
 for r in range(idx_end_of_year + 1):
-    for s in range(1, ${{ inputs.npairs }} + 1 ):
+    for s in range(1, NPAIRS + 1 ):
         try:
             ref = burstIDs[r]
             sec = burstIDs[r+s]
