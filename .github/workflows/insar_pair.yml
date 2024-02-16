@@ -26,7 +26,7 @@ on:
         description: Polarization
         default: 'VV'
         options: ['VV', 'VH', 'HH']
-      nlooks:
+      looks:
           type: choice
           required: true
           description: Range x Azimuth Looks
@@ -35,6 +35,11 @@ on:
             - 20x4
             - 10x2
             - 5x1
+      jobname:
+        type: string
+        required: true
+        description: Shorthand jobname (e.g. 20230621_20230703)
+        default: hyp3-isce2
 
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
@@ -54,13 +59,16 @@ on:
       year:
         type: string
         required: true
-      nlooks:
+      looks:
         type: string
         required: true
+      jobname:
+        type: string
+        required: false
 
 jobs:
   hyp3-isce2:
-    name: ${{ inputs.reference }} - ${{ inputs.secondary }} 
+    name: ${{ inputs.jobname }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -110,7 +118,7 @@ jobs:
             ${{ inputs.secondary }}  \
             --burstId ${{ inputs.burstId }} \
             --polarization ${{ inputs.polarization }} \
-            --looks ${{ inputs.nlooks }} \
+            --looks ${{ inputs.looks }} \
             --apply-water-mask False 
 
       - name: Create STAC Metadata
