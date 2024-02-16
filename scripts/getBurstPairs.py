@@ -9,7 +9,7 @@ import os
 START = int(os.environ['Year'])
 END = START+1
 POL = os.environ['Polarization']
-FULLBURSTID = os.environ['FullBurstId']
+FULLBURSTID = os.environ['BurstId']
 NPAIRS = int(os.environ['NPairs'])
 
 RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')

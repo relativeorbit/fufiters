@@ -56,7 +56,7 @@ on:
 
 # Convert inputs to environment variables for all job steps
 env:
-  burstId: ${{ inputs.burstId }}
+  BurstId: ${{ inputs.burstId }}
   Year: ${{ inputs.year }}
   Polarization: ${{ inputs.polarization }}
   Looks: ${{ inputs.looks }}
