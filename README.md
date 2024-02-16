@@ -25,7 +25,7 @@ polarization=VV [HH]
 Use the full SLC names and specify the full burstId (`[Track]_[Burst]_[Subswath]`) that you want to process:
 
 ```
-gh -R relativeorbit/fufiters workflow run singleburst_SLC.yml \
+gh -R relativeorbit/fufiters workflow run insar_pair.yml \
   -f reference=S1A_IW_SLC__1SDV_20190101T121401_20190101T121429_025284_02CBEB_65D7 \
   -f secondary=S1A_IW_SLC__1SDV_20190113T121401_20190113T121429_025459_02D234_3311 \
   -f burstId=012_023790_IW1  
@@ -58,14 +58,14 @@ python -m hyp3_isce2 ++process insar_tops_fufiters \
 This workflow will do the search automatically and create 3 pairs for every date (n+1, n+2, n+3 pairs). It uses a 'matrix job' such that processing sets of interferograms for each year runs in parallel.
 
 ```
-gh -R relativeorbit/fufiters workflow run fufiters_insar_pipeline.yml \
+gh -R relativeorbit/fufiters workflow run insar_pipeline.yml \
   -f burstId=012_023790_IW1  
 ```
 
 #### Generate a set of pixel offsets for all years
 
 ```
-gh -R relativeorbit/fufiters workflow run fufiters_offsets_pipeline.yml \
+gh -R relativeorbit/fufiters workflow run offsets_pipeline.yml \
   -f burstId=012_023790_IW1  
 ```
 
@@ -78,7 +78,7 @@ gh -R relativeorbit/fufiters workflow run fufiters_offsets_pipeline.yml \
   * ESA_USERNAME & ESA_PASSWORD (to download Sentinel-1 precise orbits from https://dataspace.copernicus.eu)
 
 
-* Persistant COG and STAC outputs are stored in an AWS S3 Bucket (https://github.com/relativeorbit/pulumi-fufiters). 
+* Persistant COG outputs are stored in an AWS S3 Bucket (configured here https://github.com/relativeorbit/pulumi-fufiters). 
 
 ## Ackowledgments
 [University of Washington eScience Winter Incubator 2024](https://escience.washington.edu/incubator-24-glacial-lakes/)

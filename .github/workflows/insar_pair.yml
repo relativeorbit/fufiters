@@ -123,10 +123,11 @@ jobs:
 
       - name: Get Dates for Output Subfolder Name
         env:
+          BURSTID: ${{ inputs.burstId }}
           REF: ${{ inputs.reference }}
           SEC: ${{ inputs.secondary }}
         run: |
-          PREFIX=${REF:17:8}_${SEC:17:8}
+          PREFIX=${BURSTID}/${REF:17:8}_${SEC:17:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
       
       # TODO: add conditional for s3bucket / change testing->production when ready
