@@ -6,18 +6,19 @@ import json
 import os
 
 # Parse Workflow inputs from environment variables
-START = int(os.environ['Year'])
-END = START+1
 POL = os.environ['Polarization']
 FULLBURSTID = os.environ['BurstId']
 
-# If we're doing offset pairs this environment var exists
+# If we're doing offset pairs DT is set in workflow (could also read GitHub context vars)
 try:
     DT = int(os.environ['Offsets_DT'])
+    START = None
+    END = None
 except:
     NPAIRS = int(os.environ['NPairs'])
-    DT=None
-
+    START = f"{int(os.environ['Year'])}-01-01",
+    END = f"{int(os.environ['Year'])+1}-01-01"
+    DT = None
 
 RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')
 print(RELORB,BURSTID,SUBSWATH)
@@ -37,8 +38,8 @@ results = asf.search(platform=[asf.PLATFORM.SENTINEL1],
                     beamMode=asf.BEAMMODE.IW,
                     intersectsWith=gfb.iloc[0].geometry.centroid.wkt,
                     relativeOrbit=int(RELORB),
-                    start=f"{START}-01-01",
-                    end=f"{END}-03-01", #march to ensure we get some overlapping coverage for each year
+                    start=START,
+                    end=END, #march to ensure we get some overlapping coverage for each year
                     )
 gf = gpd.GeoDataFrame.from_features(results.geojson(), crs=4326)
 print('Results:', len(gf))
