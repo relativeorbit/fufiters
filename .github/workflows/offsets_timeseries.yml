@@ -27,12 +27,6 @@ on:
         description: Range x Azimuth Looks
         default: '20x4'
         options: ['20x4','10x2','5x1']
-      npairs:
-        type: choice
-        required: true
-        description: Number of Pairs per Reference
-        default: '3'
-        options: ['3','2','1']
 
 
 # Convert inputs to environment variables for all job steps
@@ -40,7 +34,6 @@ env:
   BurstId: ${{ inputs.burstId }}
   Polarization: ${{ inputs.polarization }}
   Looks: ${{ inputs.looks }}
-  NPairs: ${{ inputs.npairs }}
   Offsets_DT: ${{ inputs.dt }}
 
 

@@ -10,12 +10,12 @@ START = int(os.environ['Year'])
 END = START+1
 POL = os.environ['Polarization']
 FULLBURSTID = os.environ['BurstId']
-NPAIRS = int(os.environ['NPairs'])
 
 # If we're doing offset pairs this environment var exists
 try:
     DT = int(os.environ['Offsets_DT'])
 except:
+    NPAIRS = int(os.environ['NPairs'])
     DT=None
 
 
