@@ -11,6 +11,7 @@ END = START+1
 POL = os.environ['Polarization']
 FULLBURSTID = os.environ['BurstId']
 NPAIRS = int(os.environ['NPairs'])
+DO_OFFSETS = os.environ['Offsets']
 
 RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')
 print(RELORB,BURSTID,SUBSWATH)

@@ -1,11 +1,11 @@
 # ~n+3, n+6, n+9 mo for a given date
-name: TimeseriesSLCOffsets
-run-name: Offsets ${{ inputs.year }}  ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }} ${{ inputs.npairs }} 
+name: Offsets_Timeseries
+run-name: ${{ inputs.year }}  ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }} 
 
 on:
   workflow_dispatch:
     inputs:
-      fullBurstID:
+      burstId:
         type: string
         required: true
         description: ESA Burst Identifier (RelativeObit, ID, Subswath)
@@ -21,7 +21,7 @@ on:
         required: true
         description: Year
         default: '2024'
-      nlooks:
+      looks:
         type: choice
         required: true
         description: Range x Azimuth Looks
@@ -37,10 +37,10 @@ on:
 
 # Convert inputs to environment variables for all job steps
 env:
-  FullBurstId: ${{ inputs.fullBurstID }}
+  FullBurstId: ${{ inputs.burstId }}
   Year: ${{ inputs.year }}
   Polarization: ${{ inputs.polarization }}
-  NLooks: ${{ inputs.nlooks }}
+  NLooks: ${{ inputs.looks }}
   NPairs: ${{ inputs.npairs }}
 
 
@@ -146,77 +146,16 @@ jobs:
 
   hyp3-isce2:
     needs: searchASF
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -el {0}
     strategy:
+      fail-fast: false
       matrix: ${{ fromJson(needs.searchASF.outputs.MATRIX) }}
-    continue-on-error: true
-    name: ${{ matrix.name }} 
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-            repository: 'relativeorbit/hyp3-isce2'
-            ref: 'denseoffsetsSLCs'
-
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v1
-        with:
-          cache-environment: true
-          environment-file: environment.yml
-
-      - name: Development install
-        run: pip install -e .
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: us-west-2
-
-      - name: Get Bucket Prefix
-        env:
-          REF: ${{ matrix.reference }}
-          SEC: ${{ matrix.secondary }} 
-          BURST: ${{ inputs.fullBurstID }}
-          YEAR: ${{ inputs.year }} 
-        run: |
-          PREFIX=${BURST}/${YEAR}/${REF:17:8}_${SEC:17:8}
-          echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
-
-      - name: Run Hyp3-ISCE2
-        env: 
-            EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
-            EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD}}
-            ESA_USERNAME: ${{ secrets.ESA_USERNAME }}
-            ESA_PASSWORD: ${{ secrets.ESA_PASSWORD}}
-        run: |
-          python -m hyp3_isce2 ++process insar_tops_fufiters \
-            ${{ matrix.reference }}  \
-            ${{ matrix.secondary }}  \
-            --burstId ${{ inputs.fullBurstID }} \
-            --polarization ${{ inputs.polarization }} \
-            --looks ${{ inputs.nlooks }} \
-            --apply-water-mask False 
-
-      # - name: Create COGs + STAC Metadata
-      #   run: |
-      #     # Just install couple extra dependencies for script
-      #     # pip install pystac rasterio rio-stac jsonschema
-      #     ls
-      #     python contrib/hyp3isce2stac.py
-      
-      - name: Upload to AWS S3
-        run: | 
-          OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR s3://fufiters/backprocess_offsets/$PREFIX/$OUTDIR
-
-      # - name: Upload Hyp3 Output to GitHub
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ env.PREFIX }}
-      #     path: S1*.zip
+    uses: ./.github/workflows/offsets_pair.yml
+    with:
+      reference: ${{ matrix.reference }}
+      secondary: ${{ matrix.secondary }} 
+      burstId: ${{ inputs.burstId }}
+      year: ${{ matrix.year }}
+      polarization: ${{ inputs.polarization }}
+      looks: ${{ inputs.looks }}
+      jobname: ${{ matrix.name }}
+    secrets: inherit

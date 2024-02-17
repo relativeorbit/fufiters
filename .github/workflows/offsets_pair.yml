@@ -1,6 +1,6 @@
 # Single Pair DenseOffsets
-name: SingleBurstSLCDenseOffsets
-run-name: ${{ inputs.BurstID }} ${{ inputs.reference }} ${{ inputs.secondary }} 
+name: Offsets_Pair
+run-name: ${{ inputs.burstId }}
 
 on:
   workflow_dispatch:
@@ -26,7 +26,7 @@ on:
         description: Polarization
         default: 'VV'
         options: ['VV', 'VH', 'HH']
-      nlooks:
+      looks:
           type: choice
           required: true
           description: Range x Azimuth Looks
@@ -35,6 +35,30 @@ on:
             - 20x4
             - 10x2
             - 5x1
+  # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
+  workflow_call:
+    inputs:
+      reference:
+        type: string
+        required: true
+      secondary:
+        type: string
+        required: true
+      burstId:
+        type: string
+        required: true
+      polarization:
+        type: string
+        required: true
+      year:
+        type: string
+        required: true
+      looks:
+        type: string
+        required: true
+      jobname:
+        type: string
+        required: false
 
 jobs:
   hyp3-isce2:
@@ -66,14 +90,6 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-west-2
 
-      - name: Get Bucket Prefix
-        env:
-          REF: ${{ inputs.reference }}
-          SEC: ${{ inputs.secondary }}
-        run: |
-          PREFIX=${REF:17:8}_${SEC:17:8}
-          echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
-
       - name: Run Hyp3-ISCE2
         env:
           EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
@@ -86,20 +102,25 @@ jobs:
             ${{ inputs.secondary }}  \
             --burstId ${{ inputs.burstId }} \
             --polarization ${{ inputs.polarization }} \
-            --looks ${{ inputs.nlooks }} \
+            --looks ${{ inputs.looks }} \
             --apply-water-mask False 
 
-      # - name: Create STAC Metadata
-      #   run: |
-      #     python create_stac_item.py 
+      - name: Get Dates for Output Subfolder Name
+        env:
+          BURSTID: ${{ inputs.burstId }}
+          REF: ${{ inputs.reference }}
+          SEC: ${{ inputs.secondary }}
+        run: |
+          PREFIX=${BURSTID}/${REF:17:8}_${SEC:17:8}
+          echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
       
       - name: Upload to AWS S3
         run: | 
           OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR s3://fufiters/backprocess_offsets/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR s3://fufiters/testing/offsets/$PREFIX/$OUTDIR
 
-      # - name: Upload to GitHub Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ env.PREFIX }}
-      #     path: S1*.zip
+      - name: Upload to GitHub Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PREFIX }}
+          path: S1_*INT*

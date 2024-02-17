@@ -1,11 +1,11 @@
 # Try resuable workflow pipeline for 256+ offset pairs
-name: FufitersOffsetsPipeline
-run-name: Offsets ${{ inputs.fullBurstID }} ${{ inputs.polarization }} ${{ inputs.nlooks }}
+name: Offsets_Pipeline
+run-name: ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }}
 
 on:
   workflow_dispatch:
     inputs:
-      fullBurstID:
+      burstId:
           type: string
           required: true
           description: ESA Burst Identifier (RelativeObit, ID, Subswath)
@@ -16,7 +16,7 @@ on:
           description: Polarization
           default: 'VV'
           options: ['VV', 'VH', 'HH']
-      nlooks:
+      looks:
           type: choice
           required: true
           description: Range x Azimuth Looks
@@ -24,27 +24,28 @@ on:
           options: ['20x4','10x2','5x1']
 
 jobs:
+    # TODO: switch to matrix job (see insar_timeseries.yml)
     denseOffsets3:
-        uses: ./.github/workflows/fufiters_denseoffsets.yml
+        uses: ./.github/workflows/offsets_timeseries.yml
         with: 
-            fullBurstID: ${{ inputs.fullBurstID }}
+            burstId: ${{ inputs.burstId }}
             polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.nlooks }}
+            nlooks: ${{ inputs.looks }}
             dt: 3
         secrets: inherit
     denseOffsets6:
-        uses: ./.github/workflows/fufiters_denseoffsets.yml
+        uses: ./.github/workflows/offsets_timeseries.yml
         with: 
-            fullBurstID: ${{ inputs.fullBurstID }}
+            burstId: ${{ inputs.burstId }}
             polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.nlooks }}
+            nlooks: ${{ inputs.looks }}
             dt: 6
         secrets: inherit
     denseOffsets8:
-        uses: ./.github/workflows/fufiters_denseoffsets.yml
+        uses: ./.github/workflows/offsets_timeseries.yml
         with: 
-            fullBurstID: ${{ inputs.fullBurstID }}
+            burstId: ${{ inputs.burstId }}
             polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.nlooks }}
+            nlooks: ${{ inputs.looks }}
             dt: 8
         secrets: inherit
