@@ -16,8 +16,9 @@ try:
     END = None
 except:
     NPAIRS = int(os.environ['NPairs'])
-    START = f"{int(os.environ['Year'])}-01-01",
-    END = f"{int(os.environ['Year'])+1}-01-01"
+    START_YEAR = int(os.environ['Year'])
+    START = f"{START_YEAR}-01-01",
+    END = f"{START_YEAR+1}-03-01"
     DT = None
 
 RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')
@@ -81,7 +82,7 @@ if DT:
             pairs.append({'reference': refname, 'secondary': secname, 'name':shortname})
 else:
     # InSAR Pairs
-    idx_end_of_year = gf.index[gf.datetime.dt.year == START][-1]
+    idx_end_of_year = gf.index[gf.datetime.dt.year == START_YEAR][-1]
     for r in range(idx_end_of_year + 1):
         for s in range(1, NPAIRS + 1 ):
             try:
