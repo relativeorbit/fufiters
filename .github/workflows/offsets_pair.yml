@@ -107,17 +107,18 @@ jobs:
 
       - name: Get Dates for Output Subfolder Name
         env:
-          BURSTID: ${{ inputs.burstId }}
           REF: ${{ inputs.reference }}
           SEC: ${{ inputs.secondary }}
         run: |
-          PREFIX=${BURSTID}/${REF:17:8}_${SEC:17:8}
+          PREFIX=${REF:17:8}_${SEC:17:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
       
       - name: Upload to AWS S3
+        env:
+          BURSTID: ${{ inputs.burstId }}
         run: | 
           OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR s3://fufiters/testing/offsets/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR s3://fufiters/testing/offsets/$BURSTID/$PREFIX/$OUTDIR
 
       - name: Upload to GitHub Artifact
         uses: actions/upload-artifact@v4

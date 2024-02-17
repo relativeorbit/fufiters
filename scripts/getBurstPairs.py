@@ -11,7 +11,13 @@ END = START+1
 POL = os.environ['Polarization']
 FULLBURSTID = os.environ['BurstId']
 NPAIRS = int(os.environ['NPairs'])
-DO_OFFSETS = os.environ['Offsets']
+
+# If we're doing offset pairs this environment var exists
+try:
+    DT = int(os.environ['OFFSETS_DT'])
+except:
+    DT=None
+
 
 RELORB,BURSTID,SUBSWATH = FULLBURSTID.split('_')
 print(RELORB,BURSTID,SUBSWATH)
@@ -55,19 +61,37 @@ print('Number of Acquisitions: ', len(gf))
 burstIDs = gf.sceneName.to_list()
 print('\n'.join(burstIDs))
 
-# Create Matrix Job Mapping (JSON Array)
-idx_end_of_year = gf.index[gf.datetime.dt.year == START][-1]
 pairs = []
-for r in range(idx_end_of_year + 1):
-    for s in range(1, NPAIRS + 1 ):
-        try:
-            ref = burstIDs[r]
-            sec = burstIDs[r+s]
-            shortname = f'{ref[17:25]}_{sec[17:25]}'
-            pairs.append({'reference': ref, 'secondary': sec, 'name':shortname})
-        except IndexError as e:
-            print(f'ASF Search did not return a n+{s} pair for {ref}')
+if DT:
+    # OFFSET PAIRS
+    gf.set_index('datetime', inplace=True, drop=False)
+    for index,row in gf.iterrows():
+        dt = gf.index[-1] - index
+        if dt < gpd.pd.Timedelta(days=365*DT):
+            print(f'{refname} within {DT} years of last acquisition')
+            break
+        else:
+            refname = row.sceneName
+            ts = index + gpd.pd.DateOffset(years=DT)
+            idx = gf.index.get_indexer([ts], method='nearest')[0]
+            sec = gf.iloc[idx]
+            secname = sec.sceneName
+            shortname = f'{refname[17:25]}_{secname[17:25]}'
+            pairs.append({'reference': refname, 'secondary': secname, 'name':shortname})
+else:
+    # InSAR Pairs
+    idx_end_of_year = gf.index[gf.datetime.dt.year == START][-1]
+    for r in range(idx_end_of_year + 1):
+        for s in range(1, NPAIRS + 1 ):
+            try:
+                ref = burstIDs[r]
+                sec = burstIDs[r+s]
+                shortname = f'{ref[17:25]}_{sec[17:25]}'
+                pairs.append({'reference': ref, 'secondary': sec, 'name':shortname})
+            except IndexError as e:
+                print(f'ASF Search did not return a n+{s} pair for {ref}')
 
+# Save JSON for GitHub Actions Matrix Job
 matrixJSON = f'{{"include":{json.dumps(pairs)}}}'
 print(f'Number of Interferograms: {len(pairs)}')
 print(matrixJSON)
