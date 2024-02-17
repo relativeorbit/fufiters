@@ -14,7 +14,7 @@ NPAIRS = int(os.environ['NPairs'])
 
 # If we're doing offset pairs this environment var exists
 try:
-    DT = int(os.environ['OFFSETS_DT'])
+    DT = int(os.environ['Offsets_DT'])
 except:
     DT=None
 
