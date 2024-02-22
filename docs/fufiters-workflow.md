@@ -38,3 +38,10 @@ hyp3-isce2 creates unique output folder names so that re-runing a workflow never
 ### Compute Denseoffsets
 
 Hyp3-isce2 disables runnning the denseOffsets step of the topsApp.py isce2 workflow. We needed to generate offset maps for long time spans in addition to short timespan interferograms, so we have an additional workflow to just compute offsets and skip interferogram creation, unwrapping, filtering, etc.
+
+
+## Workflow deployment
+
+ASF's Hyp3 uses AWS Batch to run a docker container of the standard hyp3-isce2 insar_tops_burst workflow (https://hyp3-docs.asf.alaska.edu/using/sdk/) This is a very convenient way to generate up to 1000 burst products per month if you have a NASA Earthdata login! However, we wanted to try deploying the workflow on GitHub Actions because we knew we would be exceding typical user quotas and also wanted to explore the merits of using GitHub actions versus a system like AWS Batch or Azure Batch. 
+
+One drawback of this approach is that we are not running computations in the same datacenter as where the input Sentinel-1 SLCs are stored (AWS us-west-2), but because we are working with bursts instead of full-frame SLCs, download volumes are minimized. Alternatives include deploying a custom version of [Hyp3](https://github.com/ASFHyP3/hyp3) into our own AWS account or using cloud infrastructure management tools like prefect.io or coiled.io. 
