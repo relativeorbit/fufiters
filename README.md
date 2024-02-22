@@ -51,6 +51,14 @@ python -m hyp3_isce2 ++process insar_tops_fufiters \
   --apply-water-mask False
 ```
 
+#### Generate a set of interferograms for a specific year
+
+This workflow will do the search automatically and create 3 pairs for every acquisition date in a year (n+1, n+2, n+3 pairs).
+```
+gh -R relativeorbit/fufiters workflow run insar_timeseries.yml \
+  -f year=2023 \
+  -f burstId=012_023790_IW1  
+```
 
 #### Generate a set of interferograms for all years
 
