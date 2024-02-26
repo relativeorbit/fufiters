@@ -34,9 +34,7 @@ jobs:
         strategy:
             matrix:
                 #year: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
-                # Test with just 3
-                year: [2023, 2024]
-
+                year: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
         uses: ./.github/workflows/insar_timeseries.yml
         with: 
             burstId: ${{ inputs.burstId }}
