@@ -31,7 +31,7 @@ jobs:
             burstId: ${{ inputs.burstId }}
             polarization: ${{ inputs.polarization }}
             nlooks: ${{ inputs.looks }}
-            dt: 3
+            dt: 4
         secrets: inherit
     denseOffsets6:
         uses: ./.github/workflows/offsets_timeseries.yml
@@ -39,7 +39,7 @@ jobs:
             burstId: ${{ inputs.burstId }}
             polarization: ${{ inputs.polarization }}
             nlooks: ${{ inputs.looks }}
-            dt: 6
+            dt: 5
         secrets: inherit
     denseOffsets8:
         uses: ./.github/workflows/offsets_timeseries.yml
@@ -47,5 +47,5 @@ jobs:
             burstId: ${{ inputs.burstId }}
             polarization: ${{ inputs.polarization }}
             nlooks: ${{ inputs.looks }}
-            dt: 8
+            dt: 6
         secrets: inherit
