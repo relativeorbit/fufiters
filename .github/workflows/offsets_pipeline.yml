@@ -24,28 +24,15 @@ on:
           options: ['20x4','10x2','5x1']
 
 jobs:
-    # TODO: switch to matrix job (see insar_timeseries.yml)
-    denseOffsets3:
+    denseOffsets:   
+        strategy:
+          fail-fast: false
+          matrix: 
+            dt: [4, 5, 6]
         uses: ./.github/workflows/offsets_timeseries.yml
         with: 
             burstId: ${{ inputs.burstId }}
             polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.looks }}
-            dt: 4
-        secrets: inherit
-    denseOffsets6:
-        uses: ./.github/workflows/offsets_timeseries.yml
-        with: 
-            burstId: ${{ inputs.burstId }}
-            polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.looks }}
-            dt: 5
-        secrets: inherit
-    denseOffsets8:
-        uses: ./.github/workflows/offsets_timeseries.yml
-        with: 
-            burstId: ${{ inputs.burstId }}
-            polarization: ${{ inputs.polarization }}
-            nlooks: ${{ inputs.looks }}
-            dt: 6
+            looks: ${{ inputs.looks }}
+            dt: ${{ matrix.dt }}
         secrets: inherit

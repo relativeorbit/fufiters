@@ -50,9 +50,6 @@ on:
       polarization:
         type: string
         required: true
-      year:
-        type: string
-        required: true
       looks:
         type: string
         required: true
