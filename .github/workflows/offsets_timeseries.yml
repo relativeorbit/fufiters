@@ -1,6 +1,6 @@
 # ~n+3, n+6, n+9 mo for a given date
 name: Offsets_Timeseries
-run-name: ${{ inputs.year }}  ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }} 
+run-name: ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.dt }} ${{ inputs.looks }} 
 
 on:
   workflow_dispatch:
@@ -90,7 +90,6 @@ jobs:
       reference: ${{ matrix.reference }}
       secondary: ${{ matrix.secondary }} 
       burstId: ${{ inputs.burstId }}
-      year: ${{ matrix.year }}
       polarization: ${{ inputs.polarization }}
       looks: ${{ inputs.looks }}
       jobname: ${{ matrix.name }}
