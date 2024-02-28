@@ -35,7 +35,7 @@ Note: to select SLC names you can use https://search.asf.alaska.edu or use ASF's
 
 ##### Run workflow locally
 You must first install a specific branch of hyp3-isce2:
-```
+```bash
 git clone https://github.com/relativeorbit/hyp3-isce2.git
 cd hyp3-isce2
 mamba env create -f environment.yml
@@ -54,7 +54,7 @@ python -m hyp3_isce2 ++process insar_tops_fufiters \
 #### Generate a set of interferograms for a specific year
 
 This workflow will do the search automatically and create 3 pairs for every acquisition date in a year (n+1, n+2, n+3 pairs).
-```
+```bash
 gh -R relativeorbit/fufiters workflow run insar_timeseries.yml \
   -f year=2023 \
   -f burstId=012_023790_IW1  
@@ -65,25 +65,53 @@ gh -R relativeorbit/fufiters workflow run insar_timeseries.yml \
 
 This workflow will do the search automatically and create 3 pairs for every date (n+1, n+2, n+3 pairs). It uses a 'matrix job' such that processing sets of interferograms for each year runs in parallel.
 
-```
+```bash
 gh -R relativeorbit/fufiters workflow run insar_pipeline.yml \
   -f burstId=012_023790_IW1  
 ```
 
 #### Generate a set of pixel offsets for all years
 
-```
+```bash
 gh -R relativeorbit/fufiters workflow run offsets_pipeline.yml \
   -f burstId=012_023790_IW1  
+```
+
+
+#### Download artifacts 
+
+Note this particular workflow was run twice
+
+```bash
+gh -R relativeorbit/fufiters run list -w insar_pipeline.yml
+
+STATUS  TITLE                     WORKFLOW        BRANCH  EVENT              ID          ELAPSED   AGE               
+✓       121_258662_IW2 VV 5x1 3   InSAR_Pipeline  main    workflow_dispatch  8072975855  23m26s    about 15 hours ago
+✓       121_258661_IW2 VV 5x1 2   InSAR_Pipeline  main    workflow_dispatch  8055416864  1h29m41s  about 1 day ago
+```
+
+```bash
+gh -R relativeorbit/fufiters run view 8072975855
+```
+
+```bash 
+# Download interferograms for a specific date
+gh -R relativeorbit/fufiters run download 8072975855 --dir /tmp/121_258662_IW2 --pattern "*20190813*"
+
+# Specific artifact
+gh -R relativeorbit/fufiters run download 8072975855 --dir /tmp/121_258662_IW2 --name "20190720_20190813"
+
+# All artifacts (may take a while!)
+gh -R relativeorbit/fufiters run download 8072975855 --dir /tmp/121_258662_IW2
 ```
 
 
 ## Configuration
 
 * The workflow requires the following Actions secrets: 
-  * AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY (for an IAM user that *only* has access to and S3 bucket)
-  * EARTHDATA_USERNAME & EARTHDATA_PASSWORD (to download S1 Bursts from ASF DAAC)
-  * ESA_USERNAME & ESA_PASSWORD (to download Sentinel-1 precise orbits from https://dataspace.copernicus.eu)
+  * `AWS_ACCESS_KEY_ID` & `AWS_SECRET_ACCESS_KEY` (for an IAM user that *only* has access to and S3 bucket)
+  * `EARTHDATA_USERNAME` & `EARTHDATA_PASSWORD` (to download S1 Bursts from ASF DAAC https://urs.earthdata.nasa.gov)
+  * `ESA_USERNAME` & `ESA_PASSWORD` (to download Sentinel-1 precise orbits from https://dataspace.copernicus.eu)
 
 
 * Persistant COG outputs are stored in an AWS S3 Bucket (configured here https://github.com/relativeorbit/pulumi-fufiters). 

@@ -99,7 +99,6 @@ jobs:
       reference: ${{ matrix.reference }}
       secondary: ${{ matrix.secondary }} 
       burstId: ${{ inputs.burstId }}
-      year: ${{ matrix.year }}
       polarization: ${{ inputs.polarization }}
       looks: ${{ inputs.looks }}
       jobname: ${{ matrix.name }}

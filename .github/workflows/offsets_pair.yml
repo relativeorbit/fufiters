@@ -59,6 +59,7 @@ on:
 
 jobs:
   hyp3-isce2:
+    name: ${{ inputs.jobname }}
     runs-on: ubuntu-latest
     defaults:
       run:
