@@ -47,7 +47,7 @@ python -m hyp3_isce2 ++process insar_tops_fufiters \
   S1A_IW_SLC__1SDV_20190101T121401_20190101T121429_025284_02CBEB_65D7 \
   S1A_IW_SLC__1SDV_20190113T121401_20190113T121429_025459_02D234_3311 \
   --burstId 012_023790_IW1 \
-  --looks 5x1 \ 
+  --looks 20x4 \
   --apply-water-mask False
 ```
 
