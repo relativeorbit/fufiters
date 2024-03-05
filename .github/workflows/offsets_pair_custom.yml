@@ -100,7 +100,7 @@ jobs:
 
       - name: Copy Custom topsApp XML config
         continue-on-error: true 
-        run: 
+        run: | 
           wget https://raw.githubusercontent.com/relativeorbit/workflows/main/fufiters.xml
           cat fufiters.xml
 
