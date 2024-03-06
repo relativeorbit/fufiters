@@ -135,6 +135,7 @@ jobs:
           BURSTID: ${{ inputs.burstId }}
         run: | 
           OUTDIR=`ls -d S1_*`
+          cp topsApp.xml $OUTDIR
           aws s3 sync $OUTDIR s3://fufiters/production/insar/$BURSTID/$PREFIX/$OUTDIR
 
       - name: Upload to GitHub Artifact
