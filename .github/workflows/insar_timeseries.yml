@@ -1,4 +1,4 @@
-# n+1, n+2, n+3 pairs for a given burst + year
+# Call insar_pair.yml for n+1, n+2, n+3 pairs for a given burst & year
 name: InSAR_Timeseries
 run-name: ${{ inputs.year }}  ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }} 
 
@@ -43,10 +43,10 @@ on:
       polarization:
         type: string
         required: true
-      year:
+      looks:
         type: string
         required: true
-      looks:
+      year:
         type: string
         required: true
       npairs:
@@ -61,7 +61,6 @@ env:
   Polarization: ${{ inputs.polarization }}
   Looks: ${{ inputs.looks }}
   NPairs: ${{ inputs.npairs }}
-
 
 jobs:
   searchASF:

@@ -1,4 +1,4 @@
-# Extract bursts from SLCs
+# Extract bursts from pair of SLCs and run InSAR processing
 name: InSAR_Pair
 run-name: ${{ inputs.burstId }} 
 
@@ -27,17 +27,17 @@ on:
         default: 'VV'
         options: ['VV', 'VH', 'HH']
       looks:
-          type: choice
-          required: true
-          description: Range x Azimuth Looks
-          default: 20x4
-          options: 
-            - 20x4
-            - 10x2
-            - 5x1
+        type: choice
+        required: true
+        description: Range x Azimuth Looks
+        default: 20x4
+        options: 
+          - 20x4
+          - 10x2
+          - 5x1
       jobname:
         type: string
-        required: true
+        required: false
         description: Shorthand jobname (e.g. 20230621_20230703)
         default: hyp3-isce2
 
@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@v4
         with:
             repository: 'relativeorbit/hyp3-isce2'
-            ref: 'backprocess'
+            ref: 'fufiters'
 
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
@@ -84,7 +84,6 @@ jobs:
           cache-environment: true
           environment-file: environment.yml
 
-      # TODO: lock in specific version once workflow is stable
       - name: Development install
         run: pip install -e .
 
@@ -94,6 +93,18 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-west-2
+
+      - name: Copy Custom topsApp XML config
+        continue-on-error: true 
+        run: |
+          wget https://raw.githubusercontent.com/relativeorbit/workflows/main/fufiters.xml
+          cat fufiters.xml
+
+      - name: Cache DEM for Burst
+        uses: actions/cache@v4
+        with:
+          path: ./dem
+          key: dem-${{ inputs.burstId }}
 
       - name: Run Hyp3-ISCE2
         env:
@@ -108,15 +119,8 @@ jobs:
             --burstId ${{ inputs.burstId }} \
             --polarization ${{ inputs.polarization }} \
             --looks ${{ inputs.looks }} \
-            --apply-water-mask False 
-
-      - name: Report Machine Stats
-        run: |
-          nproc
-          free -h
-          df -h
-          pwd
-          ls -ltrh 
+            --apply-water-mask False \
+            --offsets False
 
       - name: Get Dates for Output Subfolder Name
         env:
@@ -126,17 +130,15 @@ jobs:
           PREFIX=${REF:17:8}_${SEC:17:8}
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
       
-      # TODO: add conditional for s3bucket / change testing->production when ready
       - name: Upload to AWS S3
         env:
           BURSTID: ${{ inputs.burstId }}
         run: | 
           OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR s3://fufiters/testing/insar/$BURSTID/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR s3://fufiters/production/insar/$BURSTID/$PREFIX/$OUTDIR
 
-      #TODO: boolean flag to save to GitHub Artifacts?
       - name: Upload to GitHub Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PREFIX }}
-          path: S1_*INT*
+          path: S1_*FFTS

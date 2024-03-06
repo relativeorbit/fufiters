@@ -1,4 +1,4 @@
-# Try resuable workflow pipeline for 256+ offset pairs
+# Call insar_timeseries for multiple years
 name: InSAR_Pipeline
 run-name: ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }}
 

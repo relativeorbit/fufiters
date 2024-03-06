@@ -35,6 +35,12 @@ on:
             - 20x4
             - 10x2
             - 5x1
+      jobname:
+        type: string
+        required: false
+        description: Shorthand jobname (e.g. 20230621_20230703)
+        default: hyp3-isce2
+
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
     inputs:
@@ -70,7 +76,7 @@ jobs:
         uses: actions/checkout@v4
         with:
             repository: 'relativeorbit/hyp3-isce2'
-            ref: 'denseoffsetsSLCs'
+            ref: 'fufiters'
 
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
@@ -88,6 +94,18 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: us-west-2
 
+      - name: Copy Custom topsApp XML config
+        continue-on-error: true 
+        run: |
+          wget https://raw.githubusercontent.com/relativeorbit/workflows/main/fufiters.xml
+          cat fufiters.xml
+
+      - name: Cache DEM for Burst
+        uses: actions/cache@v4
+        with:
+          path: ./dem
+          key: dem-${{ inputs.burstId }}
+
       - name: Run Hyp3-ISCE2
         env:
           EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
@@ -101,7 +119,8 @@ jobs:
             --burstId ${{ inputs.burstId }} \
             --polarization ${{ inputs.polarization }} \
             --looks ${{ inputs.looks }} \
-            --apply-water-mask False 
+            --apply-water-mask False \
+            --offsets False
 
       - name: Get Dates for Output Subfolder Name
         env:
@@ -116,10 +135,10 @@ jobs:
           BURSTID: ${{ inputs.burstId }}
         run: | 
           OUTDIR=`ls -d S1_*`
-          aws s3 sync $OUTDIR s3://fufiters/testing/offsets/$BURSTID/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR s3://fufiters/production/offsets/$BURSTID/$PREFIX/$OUTDIR
 
       - name: Upload to GitHub Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PREFIX }}
-          path: S1_*INT*
+          path: S1_*FFTS

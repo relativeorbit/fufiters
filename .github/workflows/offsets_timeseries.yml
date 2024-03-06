@@ -52,7 +52,6 @@ env:
   Looks: ${{ inputs.looks }}
   Offsets_DT: ${{ inputs.dt }}
 
-
 jobs:
   searchASF:
     runs-on: ubuntu-latest
@@ -78,7 +77,6 @@ jobs:
         id: asf-search
         run: | 
           python scripts/getBurstPairs.py
-
 
   hyp3-isce2:
     needs: searchASF
