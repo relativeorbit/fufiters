@@ -120,7 +120,7 @@ jobs:
             --polarization ${{ inputs.polarization }} \
             --looks ${{ inputs.looks }} \
             --apply-water-mask False \
-            --offsets False
+            --offsets True
 
       - name: Get Dates for Output Subfolder Name
         env:
