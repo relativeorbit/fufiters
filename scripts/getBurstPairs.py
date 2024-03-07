@@ -12,7 +12,7 @@ FULLBURSTID = os.environ['BurstId']
 # If we're doing offset pairs DT is set in workflow (could also read GitHub context vars)
 try:
     DT = int(os.environ['Offsets_DT'])
-    START = None
+    START = "2017-01-01"
     END = None
 except:
     NPAIRS = int(os.environ['NPairs'])
