@@ -47,6 +47,7 @@ jobs:
                                 end="2025-01-01",
                                 )
                                 
+          gf = gpd.GeoDataFrame.from_features(results.geojson(), crs=4326)
           gf['fullBurstID'] = gf.burst.str['fullBurstID']
           random_burst = gf.fullBurstID.sample(1).values[0]
           acquisitions = gf[gf.fullBurstID == random_burst]
