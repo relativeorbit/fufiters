@@ -141,6 +141,7 @@ jobs:
           echo "PREFIX=${PREFIX}" >> $GITHUB_ENV
       
       - name: Upload to AWS S3
+        if: ${{ inputs.environment }} != 'testing'
         env:
           BURSTID: ${{ inputs.burstId }}
           BUCKET: ${{ vars.BUCKET_PREFIX }}
