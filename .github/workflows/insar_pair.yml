@@ -40,6 +40,11 @@ on:
         required: false
         description: Shorthand jobname (e.g. 20230621_20230703)
         default: hyp3-isce2
+      environment:
+        type: environment
+        required: false
+        description: Environment that defines output location
+        default: production
 
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
@@ -62,9 +67,14 @@ on:
       jobname:
         type: string
         required: false
+      environment:
+        type: string
+        required: false
+        default: production
 
 jobs:
   hyp3-isce2:
+    environment: ${{ inputs.environment }}
     name: ${{ inputs.jobname }}
     runs-on: ubuntu-latest
     defaults:
@@ -133,10 +143,11 @@ jobs:
       - name: Upload to AWS S3
         env:
           BURSTID: ${{ inputs.burstId }}
+          BUCKET: ${{ vars.BUCKET_PREFIX }}
         run: | 
           OUTDIR=`ls -d S1_*`
           cp topsApp.xml $OUTDIR
-          aws s3 sync $OUTDIR s3://fufiters/production/insar/$BURSTID/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR $BUCKET/insar/$BURSTID/$PREFIX/$OUTDIR
 
       - name: Upload to GitHub Artifact
         uses: actions/upload-artifact@v4
