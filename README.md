@@ -14,13 +14,9 @@ At a minimum you need to select a Sentinel-1 Burst. You can search for Burst IDs
 
 ## Instructions
 
-Install the [GitHub actions CLI](https://cli.github.com) in order to easily run workflows from the command line. Alternatively you can manually run workflows from the 'Actions' repository tab. NOTE: you must be a member of this GitHub organization to run these workflows, or you can fork this repository and add your own secrets (see below).
+Install the [GitHub actions CLI](https://cli.github.com) in order to easily run workflows from the command line. Alternatively you can manually run workflows from the 'Actions' repository tab. 
 
-Optional inputs for all workflows: 
-```
-nlooks=5x1 [20x4, 10x2]
-polarization=VV [HH]
-```
+Note: you must be a member of this GitHub organization to run these workflows, or you can fork this repository and add your own secrets (see below).
 
 #### Generate a single burst interferogram: 
 
@@ -34,6 +30,11 @@ gh -R relativeorbit/fufiters workflow run insar_pair.yml \
 ```
 Note: to select SLC names you can use https://search.asf.alaska.edu or use ASF's Python Client https://github.com/asfadmin/Discovery-asf_search
 
+Optional inputs for all workflows: 
+```
+nlooks=5x1 [20x4, 10x2]
+polarization=VV [HH]
+```
 
 ##### Run workflow locally
 You must first install a specific branch of hyp3-isce2:
@@ -41,7 +42,7 @@ You must first install a specific branch of hyp3-isce2:
 git clone https://github.com/relativeorbit/hyp3-isce2.git
 cd hyp3-isce2
 mamba env create -f environment.yml
-git checkout backprocess 
+git checkout fufiters
 pip install -e .
 
 cd /tmp
@@ -118,5 +119,5 @@ gh -R relativeorbit/fufiters run download 8072975855 --dir /tmp/121_258662_IW2
 
 * Persistant COG outputs are stored in an AWS S3 Bucket (configured here https://github.com/relativeorbit/pulumi-fufiters). 
 
-## Ackowledgments
+## Acknowledgments
 [University of Washington eScience Winter Incubator 2024](https://escience.washington.edu/incubator-24-glacial-lakes/)
