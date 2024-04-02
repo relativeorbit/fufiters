@@ -44,7 +44,7 @@ on:
         type: environment
         required: false
         description: Environment that defines output location
-        default: glof_dating
+        default: production
 
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
@@ -70,7 +70,7 @@ on:
       environment:
         type: string
         required: false
-        default: glof_dating
+        default: production
 
 jobs:
   hyp3-isce2:
@@ -144,12 +144,12 @@ jobs:
         if: ${{ inputs.environment }} != 'testing'
         env:
           BURSTID: ${{ inputs.burstId }}
-          #BUCKET: ${{ vars.BUCKET_PREFIX }}
-          BUCKET: s3://fufiters/glof_dating
+          BUCKET: ${{ vars.BUCKET_PREFIX }}
         run: | 
           OUTDIR=`ls -d S1_*`
           cp topsApp.xml $OUTDIR
-          aws s3 sync $OUTDIR $BUCKET/insar/$BURSTID/$PREFIX/$OUTDIR
+          aws s3 sync $OUTDIR s3://fufiters/glof_dating/insar/$BURSTID/$PREFIX/$OUTDIR
+        #aws s3 sync $OUTDIR $BUCKET/insar/$BURSTID/$PREFIX/$OUTDIR
 
       - name: Upload to GitHub Artifact
         uses: actions/upload-artifact@v4
