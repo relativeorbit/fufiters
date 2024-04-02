@@ -144,7 +144,8 @@ jobs:
         if: ${{ inputs.environment }} != 'testing'
         env:
           BURSTID: ${{ inputs.burstId }}
-          BUCKET: ${{ vars.BUCKET_PREFIX }}
+          #BUCKET: ${{ vars.BUCKET_PREFIX }}
+          BUCKET: s3://fufiters/glof_dating
         run: | 
           OUTDIR=`ls -d S1_*`
           cp topsApp.xml $OUTDIR
