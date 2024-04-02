@@ -44,7 +44,7 @@ on:
         type: environment
         required: false
         description: Environment that defines output location
-        default: production
+        default: glof_dating
 
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
@@ -70,7 +70,7 @@ on:
       environment:
         type: string
         required: false
-        default: production
+        default: glof_dating
 
 jobs:
   hyp3-isce2:
