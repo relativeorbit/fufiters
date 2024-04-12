@@ -1,4 +1,11 @@
-# Search ASF for SLCs and create a matrix job mapping for burst pairs
+'''
+Search ASF for SLCs and create a matrix job mapping for burst pairs
+
+This script is intended to be run as part of a GitHub Actions workflow, but you can also
+run it locally setting inputs as environment variables:
+
+GITHUB_OUTPUT=github_outputs.txt Polarization=VV BurstId=156_334153_IW1 NPairs=1 Year=2024 python getBurstPairs.py
+'''
 import asf_search as asf
 import fsspec
 import geopandas as gpd
