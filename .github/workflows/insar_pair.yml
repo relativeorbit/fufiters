@@ -89,7 +89,7 @@ jobs:
             ref: 'fufiters'
 
       - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           cache-environment: true
           environment-file: environment.yml
