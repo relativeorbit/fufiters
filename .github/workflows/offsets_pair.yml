@@ -71,7 +71,9 @@ on:
         type: string
         required: false
         default: production
-
+permissions:
+      id-token: write   
+      contents: read
 jobs:
   hyp3-isce2:
     environment: ${{ inputs.environment }}
