@@ -9,8 +9,10 @@ import geopandas as gpd
 import json
 import os
 
+print(os.getcwd())
+
 # 58045 -> 48 coords, & CCW for NASA CMR
-gfa = gpd.read_file('../nepal.geojson') 
+gfa = gpd.read_file('nepal.geojson') 
 gfa = gfa.simplify(0.1).reverse() 
 
 asf.constants.INTERNAL.CMR_TIMEOUT = 120

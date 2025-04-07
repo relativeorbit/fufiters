@@ -1,0 +1,24 @@
+[workspace]
+authors = ["Scott Henderson <scottyhq@gmail.com>"]
+channels = ["conda-forge"]
+name = "fufiters"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+test-random-pair = "GITHUB_OUTPUT=/tmp/github_outputs.txt python scripts/getRandomPair.py"
+test-get-pairs = "GITHUB_OUTPUT=github_outputs.txt Polarization=VV BurstId=156_334153_IW1 NPairs=1 Year=2024 python getBurstPairs.py"
+find-slcs = "python scripts/findBurstIDs.py"
+find-bursts = "python scripts/SLCs.py"
+
+[dependencies]
+asf_search = ">=8.1.1,<9"
+pystac = ">=1.12.1,<2"
+rasterio = ">=1.4.3,<2"
+rio-stac = ">=0.10.1,<0.11"
+jsonschema = ">=4.23.0,<5"
+geopandas = ">=1.0.1,<2"
+pyarrow = ">=19.0.1,<20"
+fsspec = ">=2025.3.2,<2026"
+aiohttp = ">=3.11.16,<4"
+ipykernel = ">=6.29.5,<7"
