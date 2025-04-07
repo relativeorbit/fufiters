@@ -1,4 +1,4 @@
-name: hyp3-stac
+name: fufiters
 channels:
   - conda-forge
 dependencies:

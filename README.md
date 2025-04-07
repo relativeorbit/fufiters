@@ -45,6 +45,8 @@ mamba env create -f environment.yml
 git checkout fufiters
 pip install -e .
 
+mamba activate fufiters
+
 cd /tmp
 python -m hyp3_isce2 ++process insar_tops_fufiters \
   S1A_IW_SLC__1SDV_20190101T121401_20190101T121429_025284_02CBEB_65D7 \
