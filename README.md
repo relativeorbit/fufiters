@@ -2,6 +2,8 @@
 
 [![Test Workflow](https://github.com/relativeorbit/fufiters/actions/workflows/nightly_test.yml/badge.svg)](https://github.com/relativeorbit/fufiters/actions/workflows/nightly_test.yml)
 
+[![DOI](https://zenodo.org/badge/742564947.svg)](https://doi.org/10.5281/zenodo.15166765)
+
 A combined InSAR, pixel-offsets workflow for measuring elevation change in Nepal using [Sentinel-1 Synthethic Aperture Radar bursts](https://asf.alaska.edu/datasets/data-sets/derived-data-sets/sentinel-1-bursts/)
 
 ## Design
