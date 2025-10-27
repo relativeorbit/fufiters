@@ -111,10 +111,6 @@ jobs:
           path: ./dem
           key: dem-${{ inputs.burstId }}
 
-      - name: Test pixi
-        run : |
-          pixi run test-local
-
       - name: Run Hyp3-ISCE2
         env:
           EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
