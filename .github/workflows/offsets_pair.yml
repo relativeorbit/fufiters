@@ -154,7 +154,7 @@ jobs:
           aws s3 sync $OUTDIR $BUCKET/offsets/$BURSTID/$PREFIX/$OUTDIR
 
       - name: Upload to GitHub Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ env.PREFIX }}
           path: S1_*FFTS
