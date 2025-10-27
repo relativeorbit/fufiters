@@ -79,9 +79,6 @@ jobs:
     environment: ${{ inputs.environment }}
     name: ${{ inputs.jobname }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -el {0}
 
     steps:
       - name: Checkout Repository
