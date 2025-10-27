@@ -90,6 +90,10 @@ jobs:
           cache: true
           frozen: true
 
+      - name: Test pixi
+        run : |
+          pixi run test-local
+
       - name: Configure AWS Credentials
         if: ${{ inputs.environment != 'testing' }}
         uses: aws-actions/configure-aws-credentials@v5
