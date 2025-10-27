@@ -24,6 +24,7 @@ jobs:
         with:
           cache: true
           frozen: true
+          activate-environment: true
 
       # Call python script that sets needed environment variables for next job
       - name: Search ASF for bursts
