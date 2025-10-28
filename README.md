@@ -6,15 +6,17 @@
 
 A combined InSAR, pixel-offsets workflow for measuring elevation change in Nepal using [Sentinel-1 Synthethic Aperture Radar bursts](https://asf.alaska.edu/datasets/data-sets/derived-data-sets/sentinel-1-bursts/)
 
-See the following manuscript in The Cryosphere Journal for a detailed application of this software: https://egusphere.copernicus.org/preprints/2024/egusphere-2024-3196/
+See the following manuscript for a detailed application of this software to study degradation of the Imja Lake moraine dam in Nepal between 2017 and 2024: https://doi.org/10.5194/egusphere-2024-3196
+
+Note: since this workflow was developed, ASF has continued to update [hyp3-isce2](https://github.com/ASFHyP3/hyp3-isce2)  workflows, please consider if those meet your needs before using this repository.
 
 ## Design
 
-Run a modified version of [hyp3-isce2](https://github.com/ASFHyP3/hyp3-isce2) to generate an inventory of inteferograms and pixel offset maps for a given Sentinel-1 burst. Workflows are written using Python scripts and GitHub Actions for concurrent batch processing on Microsoft Azure.
+Run a modified fork of `hyp3-isce2` (https://github.com/relativeorbit/hyp3-isce2) to generate an inventory of inteferograms *and* pixel offset maps for a given Sentinel-1 burst. Workflows are written using Python scripts and GitHub Actions for concurrent batch processing on Microsoft Azure.
 
 [Resuable Workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) are composed to run processing of a single image pair, to processing all pairs over all available years in parallel (Sentinel-1 acquisitions start in October 2014).
 
-At a minimum you need to select a Sentinel-1 Burst. You can search for Burst IDs using [NASA Earthdata Search](https://search.earthdata.nasa.gov/search/granules?p=C2450786986-ASF&pg[0][v]=f&pg[0][id]=*IW*&pg[0][gsk]=-start_date&g=G2453394254-ASF&q=burst&sb[0]=80.82422%2C26.11576%2C87.97852%2C30.47298&tl=1708033475.92!3!!&lat=25.619422925906335&long=78.22265625&zoom=5
+At a minimum you need to select a Sentinel-1 Burst. You can search for Burst IDs using [NASA Earthdata Search](https://search.earthdata.nasa.gov/search/granules?p=C2450786986-ASF&pg[0][v]=f&pg[0][id]=*IW*&pg[0][gsk]=-start_date&g=G2453394254-ASF&q=burst&sb[0]=80.82422%2C26.11576%2C87.97852%2C30.47298&tl=1708033475.92!3!!&lat=25.619422925906335&long=78.22265625&zoom=5)
 
 ## Instructions
 
