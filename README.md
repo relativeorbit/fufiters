@@ -25,22 +25,30 @@ At a minimum you need to select a Sentinel-1 Burst. You can search for Burst IDs
 
 ## Instructions
 
+#### Setup
+
 Install the [GitHub actions CLI](https://cli.github.com) in order to easily run workflows from the command line. Alternatively you can manually run workflows from the 'Actions' repository tab.
 
-Note: you must be a member of this GitHub organization to run these workflows, or you can fork this repository and add your own secrets (see below).
+**Note:** you must be a member of this GitHub organization to run these workflows, or you can fork this repository and add your own secrets (see below).
+
+First for convience specify the repo where the workflows live for the `gh` commands:
+
+```bash
+export GH_REPO=relativeorbit/fufiters
+```
 
 #### Generate a single burst interferogram:
 
 Use the full SLC names and specify the full burstId (`[Track]_[Burst]_[Subswath]`) that you want to process:
 
-```
-gh -R relativeorbit/fufiters workflow run insar_pair.yml \
+```bash
+gh workflow run insar_pair.yml \
   -f reference=S1A_IW_SLC__1SDV_20190101T121401_20190101T121429_025284_02CBEB_65D7 \
   -f secondary=S1A_IW_SLC__1SDV_20190113T121401_20190113T121429_025459_02D234_3311 \
   -f burstId=012_023790_IW1 \
   -f environment=testing
 ```
-Note: to select SLC names you can use https://search.asf.alaska.edu or use ASF's Python Client https://github.com/asfadmin/Discovery-asf_search
+**Note:** to select SLC names you can use https://search.asf.alaska.edu or use ASF's Python Client https://github.com/asfadmin/Discovery-asf_search
 
 Optional inputs for all workflows:
 ```
@@ -49,9 +57,11 @@ polarization=VV [HH]
 environment=production [testing]
 ```
 
-Note: the "environment" input specifies [GitHub Environments](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments) to direct outputs to different persistent storage locations such as per-project S3 Buckets.
+**Note:** the "environment" input specifies [GitHub Environments](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments) to direct outputs to different persistent storage locations such as per-project S3 Buckets.
 
-##### Run workflow locally (only works on Linux/MacOS Intel due to ISCE2 dependency)
+**Note:** `gh>=2.87` returns the run ID, so it can be convenient to "watch" progress. Just pipe the ID with `| grep -oE '[0-9]+$' | xargs gh run watch`
+
+#### Run workflow locally (only works on Linux/MacOS Intel due to ISCE2 dependency)
 
 You must first install a specific branch of `hyp3-isce2`, we recommend using [pixi](https://pixi.sh/latest/installation/) to setup a reproducible (locked) environment:
 
@@ -72,7 +82,7 @@ python -m hyp3_isce2 ++process insar_tops_fufiters \
 
 This workflow will do the search automatically and create 3 pairs for every acquisition date in a year (n+1, n+2, n+3 pairs).
 ```bash
-gh -R relativeorbit/fufiters workflow run insar_timeseries.yml \
+gh workflow run insar_timeseries.yml \
   -f year=2023 \
   -f burstId=012_023790_IW1
 ```
@@ -83,14 +93,14 @@ gh -R relativeorbit/fufiters workflow run insar_timeseries.yml \
 This workflow will do the search automatically and create 3 pairs for every date (n+1, n+2, n+3 pairs). It uses a 'matrix job' such that processing sets of interferograms for each year runs in parallel.
 
 ```bash
-gh -R relativeorbit/fufiters workflow run insar_pipeline.yml \
+gh workflow run insar_pipeline.yml \
   -f burstId=012_023790_IW1
 ```
 
 #### Generate a set of pixel offsets for all years
 
 ```bash
-gh -R relativeorbit/fufiters workflow run offsets_pipeline.yml \
+gh workflow run offsets_pipeline.yml \
   -f burstId=012_023790_IW1
 ```
 
@@ -100,7 +110,7 @@ gh -R relativeorbit/fufiters workflow run offsets_pipeline.yml \
 Note this particular workflow was run twice
 
 ```bash
-gh -R relativeorbit/fufiters run list -w insar_pipeline.yml
+gh run list -w insar_pipeline.yml
 
 STATUS  TITLE                     WORKFLOW        BRANCH  EVENT              ID          ELAPSED   AGE
 ✓       121_258662_IW2 VV 5x1 3   InSAR_Pipeline  main    workflow_dispatch  8072975855  23m26s    about 15 hours ago
@@ -108,18 +118,18 @@ STATUS  TITLE                     WORKFLOW        BRANCH  EVENT              ID 
 ```
 
 ```bash
-gh -R relativeorbit/fufiters run view 8072975855
+gh run view 8072975855
 ```
 
 ```bash
 # Download interferograms for a specific date
-gh -R relativeorbit/fufiters run download 8072975855 --dir /tmp/121_258662_IW2 --pattern "*20190813*"
+gh run download 8072975855 --dir /tmp/121_258662_IW2 --pattern "*20190813*"
 
 # Specific artifact
-gh -R relativeorbit/fufiters run download 8072975855 --dir /tmp/121_258662_IW2 --name "20190720_20190813"
+gh run download 8072975855 --dir /tmp/121_258662_IW2 --name "20190720_20190813"
 
 # All artifacts (may take a while!)
-gh -R relativeorbit/fufiters run download 8072975855 --dir /tmp/121_258662_IW2
+gh run download 8072975855 --dir /tmp/121_258662_IW2
 ```
 
 
