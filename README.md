@@ -10,6 +10,8 @@ An application of v1.0 of this software is detailed in the following publication
 
 Brencher, G., Henderson, S. T., and Shean, D. E.: *Quantifying degradation of the Imja Lake moraine dam with fused InSAR and SAR feature tracking time series*, The Cryosphere, 20, 67–86, https://doi.org/10.5194/tc-20-67-2026, 2026.
 
+<img width="864" height="350" alt="image" src="https://github.com/user-attachments/assets/33e0fb4c-0ffb-4237-9a11-6553e99e2d60" />
+
 
 ## Design
 
