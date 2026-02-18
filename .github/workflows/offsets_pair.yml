@@ -108,7 +108,7 @@ jobs:
           cat fufiters.xml
 
       - name: Cache DEM for Burst
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./dem
           key: dem-${{ inputs.burstId }}
