@@ -37,7 +37,8 @@ Use the full SLC names and specify the full burstId (`[Track]_[Burst]_[Subswath]
 gh -R relativeorbit/fufiters workflow run insar_pair.yml \
   -f reference=S1A_IW_SLC__1SDV_20190101T121401_20190101T121429_025284_02CBEB_65D7 \
   -f secondary=S1A_IW_SLC__1SDV_20190113T121401_20190113T121429_025459_02D234_3311 \
-  -f burstId=012_023790_IW1
+  -f burstId=012_023790_IW1 \
+  -f environment=testing
 ```
 Note: to select SLC names you can use https://search.asf.alaska.edu or use ASF's Python Client https://github.com/asfadmin/Discovery-asf_search
 
@@ -45,7 +46,10 @@ Optional inputs for all workflows:
 ```
 nlooks=5x1 [20x4, 10x2]
 polarization=VV [HH]
+environment=production [testing]
 ```
+
+Note: the "environment" input specifies [GitHub Environments](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments) to direct outputs to different persistent storage locations such as per-project S3 Buckets.
 
 ##### Run workflow locally (only works on Linux/MacOS Intel due to ISCE2 dependency)
 
