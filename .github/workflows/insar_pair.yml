@@ -74,7 +74,9 @@ on:
 
 jobs:
   hyp3-isce2:
-    environment: ${{ inputs.environment }}
+    environment:
+      name: ${{ inputs.environment }}
+      deployment: false
     name: ${{ inputs.jobname }}
     runs-on: ubuntu-latest
 
