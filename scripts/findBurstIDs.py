@@ -12,6 +12,7 @@ import geopandas as gpd
 
 def find_bursts(lon, lat):
     """Find ESA Sentinel-1 burstIDs that cover a point"""
+    print('Searching ASF...')
     results = asf.geo_search(
         collections="C2450786986-ASF",
         # NOTE: collection doesn't expose beamMode, so need to filter results instead
@@ -26,17 +27,18 @@ def find_bursts(lon, lat):
     gf = gf.dropna(axis='columns')
     gf = gf.drop(columns='s3Urls')
     print(gf.loc[:, ["burstID", "flightDirection"]])
-    
+
     return gf
 
 def slippy_map(gf, lon, lat):
     """Plot geopandas polygons using folium and open in browser"""
+    print('Generating web map...')
     # Interactive map from CLI
     import webbrowser
     import folium
     from folium.plugins import MiniMap
     path = '/tmp/map.html'
-    m = gf.explore(column='burstID', tiles='Esri.WorldImagery', categorical=True, cmap='Accent')
+    m = gf.explore(column='burstID', popup=True, tiles='Esri.WorldImagery', categorical=True, cmap='Accent')
     folium.Marker(location=[lat, lon]).add_to(m)
     MiniMap(position="topright", zoom_level_fixed=1).add_to(m)
     m.save(path)
@@ -46,13 +48,14 @@ def slippy_map(gf, lon, lat):
 
 def static_map(gf, lon, lat):
     """Plot geopandas polygons using matplotlib"""
+    print('Generating matplotlib plot...')
     import matplotlib.pyplot as plt
     import contextily as cx
 
     fig, ax = plt.subplots(figsize=(11,8.5))
     gf.plot(ax=ax, column="burstID", facecolor="none", linewidth=4, cmap='Accent', legend=True)
     ax.plot(lon, lat, "k*", markersize=10)
-    
+
     # Zoom out more compared to autoscaling defaults for more context
     percent_buffer = .25
     xmin,ymin,xmax,ymax = gf.total_bounds
@@ -85,4 +88,3 @@ if __name__ == "__main__":
     if args.show_plot:
         #static_map(gf, args.lon, args.lat)
         slippy_map(gf, args.lon, args.lat)
-

@@ -18,7 +18,7 @@ def get_burst_metadata(burstID):
     gfB["burstID"] = gfB.fileID.str[3:-9]
     gfB = gfB.dropna(axis='columns')
     print(gfB.iloc[0])
-    
+
     return gfB
 
 
@@ -27,23 +27,23 @@ def search_for_slcs(gfB, start, end):
     burst = gfB.iloc[0]
     results = asf.geo_search(
                     platform=[asf.PLATFORM.SENTINEL1],
-                    processingLevel='SLC', #or BURST from 2023 onwards for select paths 
+                    processingLevel='SLC', #or BURST from 2023 onwards for select paths
                     beamMode=asf.BEAMMODE.IW,
                     relativeOrbit=burst.pathNumber,
                     intersectsWith=f"POINT({burst.centerLon} {burst.centerLat})",
                     start=start,
                     end=end,
                     )
-    
+
     gf = gpd.GeoDataFrame.from_features(results.geojson(), crs=4326)
     gf['datetime'] = gpd.pd.to_datetime(gf['startTime'])
-    
+
     print('BurstID:', burst.burstID)
     print('Number of SLCs:', len(gf))
     print('Timespan:', gf.startTime.iloc[0], gf.startTime.iloc[-1])
     print('Polarizations:', list(gf.polarization.unique()))
     print('platforms:', list(gf.platform.unique()))
-    s = gf.datetime.diff(-1).dt.round('1d').dt.days.dropna().astype('i2')
+    s = gf.datetime.diff(-1).dt.round('1D').dt.days.dropna().astype('i2')
     print('Temporal separation (min, mode, max days):', s.min(),  s.mode()[0], s.max())
 
     return gf
@@ -69,7 +69,7 @@ def timeline(gf, burstID):
     # Interactive map from CLI
     import matplotlib.pyplot as plt
     plt.figure(figsize=(11,4))
-    plt.scatter(gf.datetime, gf.platform, marker='|', color='k') 
+    plt.scatter(gf.datetime, gf.platform, marker='|', color='k')
     plt.title(burstID)
     plt.plot()
     plt.show()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--start", default=None, type=str, help="Start date (e.g. 2017-01-01)")
     parser.add_argument("-e", "--end", default=None, type=str, help="End date (e.g. 2023-01-01)")
     parser.add_argument("-g", "--geojson", default=False, action="store_true", help="Save GeoJSON metadata")
-    parser.add_argument("-p", "--show-plots", default=False, action="store_true", help="Show map of SLC footprints")
+    parser.add_argument("-p", "--show-plot", default=False, action="store_true", help="Show map of SLC footprints")
 
     args = parser.parse_args()
     # if args.start == 'None':
@@ -103,6 +103,6 @@ if __name__ == "__main__":
         # Drop lists before saving to GeoJSON
         gf.drop(columns='s3Urls').to_file(f'/tmp/{args.burstID}.geojson', driver='GeoJSON')
 
-    if args.show_plots:
+    if args.show_plot:
         slippy_map(gf, gfB)
         timeline(gf, args.burstID)

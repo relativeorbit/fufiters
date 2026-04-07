@@ -39,7 +39,7 @@ export GH_REPO=relativeorbit/fufiters
 
 #### Generate a single burst interferogram:
 
-Use the full SLC names and specify the full burstId (`[Track]_[Burst]_[Subswath]`) that you want to process:
+Use the full SLC names and specify the full burstId from those SLCs (`[Track]_[Burst]_[Subswath]`) that you want to process:
 
 ```bash
 gh workflow run insar_pair.yml \
@@ -78,6 +78,8 @@ python -m hyp3_isce2 ++process insar_tops_fufiters \
   --apply-water-mask False
 ```
 
+**Note:** Unfortunately ISCE2 doesn't run on ARM-based Macs, but you can use the `insar_pair.yml` workflow to run on GitHub Actions and download the resulting interferogram artifacts to your local machine.
+
 #### Generate a set of interferograms for a specific year
 
 This workflow will do the search automatically and create 3 pairs for every acquisition date in a year (n+1, n+2, n+3 pairs).
@@ -86,6 +88,18 @@ gh workflow run insar_timeseries.yml \
   -f year=2023 \
   -f burstId=012_023790_IW1
 ```
+
+**Note:** We created a convenience script to quickly search for burstIDs that contain a lon,lat point:
+
+```bash
+pixi run find-bursts -73.604 -49.669 --show-plot
+```
+
+Similarly, if you know a burstID and want a list of all SLCs, you can use:
+```
+pixi run find-slcs 135_289664_IW1
+```
+
 
 #### Generate a set of interferograms for all years
 

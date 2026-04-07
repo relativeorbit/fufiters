@@ -2,14 +2,14 @@
 authors = ["Scott Henderson <scottyhq@gmail.com>"]
 channels = ["conda-forge"]
 name = "fufiters"
-platforms = ["linux-64"]
+platforms = ["linux-64", "osx-arm64"]
 version = "0.1.0"
 
 [tasks]
 test-random-pair = "GITHUB_OUTPUT=/tmp/github_outputs.txt python scripts/getRandomPair.py"
 test-get-pairs = "GITHUB_OUTPUT=github_outputs.txt Polarization=VV BurstId=156_334153_IW1 NPairs=1 Year=2024 python getBurstPairs.py"
-find-slcs = "python scripts/findBurstIDs.py"
-find-bursts = "python scripts/SLCs.py"
+find-bursts = "python scripts/findBurstIDs.py"
+find-slcs = "python scripts/findSLCs.py"
 
 [dependencies]
 asf_search = ">=8.1.1,<9"
