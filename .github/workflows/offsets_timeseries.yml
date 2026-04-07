@@ -1,6 +1,6 @@
 # ~n+3, n+6, n+9 mo for a given date
 name: Offsets_Timeseries
-run-name: ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.dt }} ${{ inputs.looks }} 
+run-name: ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.dt }} ${{ inputs.looks }}
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ on:
         description: Range x Azimuth Looks
         default: '20x4'
         options: ['20x4','10x2','5x1']
- 
+
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
     inputs:
@@ -66,16 +66,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v2
+      - uses: prefix-dev/setup-pixi@v0.9.5
         with:
-          cache-environment: true
-          environment-file: environment.yml
+          cache: true
+          frozen: true
+          activate-environment: true
 
       # Call python script that sets needed environment variables for next job
       - name: Search ASF for bursts
         id: asf-search
-        run: | 
+        run: |
           python scripts/getBurstPairs.py
 
   hyp3-isce2:
@@ -86,7 +86,7 @@ jobs:
     uses: ./.github/workflows/offsets_pair.yml
     with:
       reference: ${{ matrix.reference }}
-      secondary: ${{ matrix.secondary }} 
+      secondary: ${{ matrix.secondary }}
       burstId: ${{ inputs.burstId }}
       polarization: ${{ inputs.polarization }}
       looks: ${{ inputs.looks }}

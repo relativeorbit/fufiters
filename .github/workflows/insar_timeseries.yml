@@ -1,6 +1,6 @@
 # Call insar_pair.yml for n+1, n+2, n+3 pairs for a given burst & year
 name: InSAR_Timeseries
-run-name: ${{ inputs.year }}  ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }} 
+run-name: ${{ inputs.year }}  ${{ inputs.burstId }} ${{ inputs.polarization }} ${{ inputs.looks }} ${{ inputs.npairs }}
 
 on:
   workflow_dispatch:
@@ -33,7 +33,7 @@ on:
         description: Number of Pairs per Reference
         default: '3'
         options: ['3','2','1']
-  
+
   # Must duplicate inputs for workflow_call (https://github.com/orgs/community/discussions/39357)
   workflow_call:
     inputs:
@@ -76,16 +76,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v2
+      - uses: prefix-dev/setup-pixi@v0.9.5
         with:
-          cache-environment: true
-          environment-file: environment.yml
+          cache: true
+          frozen: true
+          activate-environment: true
 
       # Call python script that sets needed environment variables for next job
       - name: Search ASF for bursts
         id: asf-search
-        run: | 
+        run: |
           python scripts/getBurstPairs.py
 
   hyp3-isce2:
@@ -96,7 +96,7 @@ jobs:
     uses: ./.github/workflows/insar_pair.yml
     with:
       reference: ${{ matrix.reference }}
-      secondary: ${{ matrix.secondary }} 
+      secondary: ${{ matrix.secondary }}
       burstId: ${{ inputs.burstId }}
       polarization: ${{ inputs.polarization }}
       looks: ${{ inputs.looks }}
