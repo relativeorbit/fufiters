@@ -26,6 +26,7 @@ def find_bursts(lon, lat):
     gf["burstID"] = gf.fileID.str[3:-9]
     gf = gf.dropna(axis='columns')
     gf = gf.drop(columns='s3Urls')
+    print(f'Found {len(gf)} bursts covering ({lon}, {lat}):')
     print(gf.loc[:, ["burstID", "flightDirection"]])
 
     return gf
