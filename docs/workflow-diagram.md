@@ -38,7 +38,7 @@ flowchart LR
 ```mermaid
 flowchart TD
     PA[/"Inputs: reference · secondary\nburstId · polarization · looks"\]
-    PAIR(["insar_pair.yml\nworkflow_call"])
+    PAIR(["insar_pair.yml\nworkflow_dispatch"])
     PB["Checkout relativeorbit/hyp3-isce2 @ fufiters branch"]
     PC["Setup pixi environment"]
     PD["Configure AWS Credentials"]
