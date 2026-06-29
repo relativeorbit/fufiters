@@ -82,7 +82,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
             repository: 'relativeorbit/hyp3-isce2'
             ref: 'fufiters'
