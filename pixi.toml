@@ -12,7 +12,7 @@ find-bursts = "python scripts/findBurstIDs.py"
 find-slcs = "python scripts/findSLCs.py"
 
 [dependencies]
-asf_search = ">=8.1.1,<9"
+asf_search = ">=12.2.2,<13"
 pystac = ">=1.12.1,<2"
 rasterio = ">=1.4.3,<2"
 rio-stac = ">=0.10.1,<0.11"
