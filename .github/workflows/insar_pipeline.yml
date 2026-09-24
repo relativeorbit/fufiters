@@ -34,8 +34,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                #year: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
-                year: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+                year: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+                # for Nepal moraine dams paper
+                #year: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
         uses: ./.github/workflows/insar_timeseries.yml
         with: 
             burstId: ${{ inputs.burstId }}
